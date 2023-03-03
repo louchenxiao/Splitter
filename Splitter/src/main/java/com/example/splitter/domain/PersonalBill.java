@@ -4,21 +4,17 @@ import org.javamoney.moneta.Money;
 
 import java.util.Objects;
 
-public class Mid {
-    private Person person;
+public class PersonalBill {
+    private final Person person;
     private Money geld;
 
-    public Mid(Person name, Money geld) {
+    public PersonalBill(Person name, Money geld) {
         this.person = name;
         this.geld = geld;
     }
 
     public Person getPerson() {
         return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
     public Money getGeld() {
@@ -40,8 +36,8 @@ public class Mid {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Mid mid)) return false;
-        return Objects.equals(getPerson(), mid.getPerson()) && Objects.equals(getGeld(), mid.getGeld());
+        if (!(o instanceof PersonalBill personalBill)) return false;
+        return Objects.equals(getPerson(), personalBill.getPerson()) && Objects.equals(getGeld(), personalBill.getGeld());
     }
 
     @Override

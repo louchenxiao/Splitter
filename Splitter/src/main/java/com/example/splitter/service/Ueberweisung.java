@@ -1,42 +1,62 @@
 package com.example.splitter.service;
 
-import com.example.splitter.domain.Mid;
-import com.example.splitter.domain.Person;
-import com.example.splitter.domain.Rechnung;
-import com.example.splitter.domain.Result;
+import com.example.splitter.domain.*;
+import com.example.splitter.repository.GroupRepo;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
 
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class Ueberweisung {
-    private List<Rechnung> rechnungList;
-    private List<Person> personList;
 
-    public Ueberweisung(List<Rechnung> rechnungList,List<Person> personList) {
-        this.rechnungList = rechnungList;
-        this.personList= personList;
+    private GroupRepo groupRepo;
+
+
+    public Ueberweisung(GroupRepo groupRepo) {
+        this.groupRepo = groupRepo;
+    }
+
+    public void createGroup(Integer id,LocalDateTime localDateTime){
+        groupRepo.addNewGroup(id,localDateTime);
+    }
+
+    public void timeToClose(Integer id,LocalDateTime localDateTime) {
+        if ((localDateTime.isAfter(groupRepo.findByID(id).orElseThrow().getLocalDateTime().plusDays(7)))) {
+            groupRepo.close(id);
+        }
+    }
+
+    public void  addPerson (Integer id , Person person, LocalDateTime localDateTime) {
+        timeToClose(id, localDateTime);
+        groupRepo.addPerson(id, person);
+    }
+
+    public void addRechnung(Integer id , Rechnung rechnung ,LocalDateTime localDateTime) {
+        timeToClose(id,localDateTime);
+        groupRepo.addRechnung(id,rechnung);
     }
 
 
-    private List<Mid> money(){
-        List<Mid> money = new ArrayList<>();
+
+    private List<PersonalBill> money(List<Person> personList){
+        List<PersonalBill> money = new ArrayList<>();
         for (Person p :personList){
-            money.add(new Mid(p,Money.of(0,"EUR")));
+            money.add(new PersonalBill(p,Money.of(0,"EUR")));
         }
         return money;
     }
 
 
-    public List<Mid> rechnen(){
-        List<Mid> money = money();
+    public List<PersonalBill> rechnen(List<Person> personList, List<Rechnung> rechnungList){
+        List<PersonalBill> money = money(personList);
         for (Rechnung r: rechnungList) {
             Double zahl = (r.getGeld().divide(r.getPersons().size())).getNumberStripped().setScale(2, RoundingMode.HALF_EVEN).doubleValue();
             Money each = Money.of(zahl,"EUR");
-            for (Mid m:money) {
+            for (PersonalBill m:money) {
                 if(m.getPerson().equals(r.getPayer())){
                     Money geld = m.getGeld();
                     m.setGeld(r.getGeld().add(geld));
@@ -53,9 +73,9 @@ public class Ueberweisung {
 
 
 
-    public List<Result> second(List<Mid> midList){
-        List<Mid> receiver= midList.stream().filter(e -> e.getGeld().isPositive()).toList();
-        List<Mid> giver = midList.stream().filter(e -> e.getGeld().isNegative()).toList();
+    public List<Result> second(List<PersonalBill> personalBillList){
+        List<PersonalBill> receiver= personalBillList.stream().filter(e -> e.getGeld().isPositive()).toList();
+        List<PersonalBill> giver = personalBillList.stream().filter(e -> e.getGeld().isNegative()).toList();
         List<Result> results = new ArrayList<>();
         for (int i = 0; i < receiver.size(); i++) {
                 for (int j = 0; j < giver.size(); j++) {
@@ -73,8 +93,11 @@ public class Ueberweisung {
         return results;
     }
 
-    public List<Result> allInOne(){
-        return second(rechnen()).stream().filter(e->!e.getMoney().isZero()).toList();
+    public List<Result> result(Integer id){
+        Gruppe gruppe = groupRepo.findByID(id).orElseThrow();
+        List<Person> personList = gruppe.getPersonList();
+        List<Rechnung> rechnungList = gruppe.getRechnungList();
+        return second(rechnen(personList,rechnungList)).stream().filter(e->!e.getMoney().isZero()).toList();
     }
 
 }

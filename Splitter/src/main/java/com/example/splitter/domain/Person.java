@@ -1,12 +1,20 @@
 package com.example.splitter.domain;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Person {
     private String name;
 
+    private List<Integer> groupIdList;
+
     public Person(String name) {
         this.name = name;
+    }
+
+    public Person(String name, List<Integer> groupIdList) {
+        this.name = name;
+        this.groupIdList = groupIdList;
     }
 
     public String getName() {
@@ -17,22 +25,11 @@ public class Person {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
+    public List<Integer> getGroupIdList() {
+        return groupIdList;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Person person)) return false;
-        return Objects.equals(getName(), person.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName());
+    public void setGroupIdList(List<Integer> groupIdList) {
+        this.groupIdList = groupIdList;
     }
 }
