@@ -27,7 +27,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
 
         u.addPerson(1, a, LocalDateTime.now());
@@ -56,7 +56,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
 
         u.addPerson(1, a, LocalDateTime.now());
@@ -83,7 +83,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -109,7 +109,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -136,7 +136,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -165,7 +165,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -201,7 +201,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -254,7 +254,7 @@ class UeberweisungTest {
         GroupRepo u1 = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(u1);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a, LocalDateTime.now());
         u.addPerson(1, b, LocalDateTime.now());
@@ -296,7 +296,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a,LocalDateTime.now());
         u.addPerson(1, b,LocalDateTime.now());
@@ -327,7 +327,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
         u.addPerson(1, a,LocalDateTime.now());
         u.addPerson(1, a,LocalDateTime.now());
         u.addPerson(1, a,LocalDateTime.now());
@@ -348,7 +348,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now());
+        u.createGroup(1, LocalDateTime.now(),a);
 
         u.addPerson(1, a,LocalDateTime.now());
 
@@ -373,7 +373,7 @@ class UeberweisungTest {
         GroupRepo groupRepo = new GroupRepo();
 
         Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.of(2023,2,3,11,0,0));
+        u.createGroup(1, LocalDateTime.of(2023,2,3,11,0,0),a);
 
         u.addPerson(1, a,LocalDateTime.of(2023,3,3,11,0,0));
 

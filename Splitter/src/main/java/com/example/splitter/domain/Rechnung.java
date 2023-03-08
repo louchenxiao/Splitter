@@ -5,24 +5,24 @@ import org.javamoney.moneta.Money;
 import java.util.List;
 
 public class Rechnung {
-    private String name;
+    private String rechnungName;
     private Money geld;
     private Person payer;
     private List<Person> persons;
 
-    public Rechnung(String name, Money geld, Person payer, List<Person> persons) {
-        this.name = name;
+    public Rechnung(String rechnungName, Money geld, Person payer, List<Person> persons) {
+        this.rechnungName = rechnungName;
         this.geld = geld;
         this.payer = payer;
         this.persons = persons;
     }
 
-    public String getName() {
-        return name;
+    public String getRechnungName() {
+        return rechnungName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRechnungName(String rechnungName) {
+        this.rechnungName = rechnungName;
     }
 
     public Money getGeld() {
@@ -48,4 +48,6 @@ public class Rechnung {
     public void setPersons(List<Person> persons) {
         this.persons = persons;
     }
+
+
 }

@@ -42,4 +42,15 @@ public class Gruppe {
     public void setOpenStatus() {
         this.openStatus = false;
     }
+
+    @Override
+    public String toString() {
+        return "Gruppe{" +
+                "id=" + id +
+                ", personList=" + personList +
+                ", rechnungList=" + rechnungList +
+                ", openStatus=" + openStatus +
+                ", localDateTime=" + localDateTime +
+                '}';
+    }
 }

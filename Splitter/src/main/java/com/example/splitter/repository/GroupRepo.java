@@ -20,10 +20,22 @@ public class GroupRepo {
     public Optional<Gruppe> findByID(Integer id){
         return gruppeList.stream().filter(gruppe -> gruppe.getId()==id).findAny();
     }
-    public void addNewGroup(Integer id, LocalDateTime localDateTime){
-        gruppeList.add(new Gruppe(id,new ArrayList<>(),new ArrayList<>(),true,localDateTime));
+
+
+    public void addNewGroup(Integer id, LocalDateTime localDateTime,Person person){
+        List<Person> personList = new ArrayList<>();
+        personList.add(person);
+        gruppeList.add(new Gruppe(id,personList,new ArrayList<>(),true,localDateTime));
+        person.getGroupIdList().add(id);
     }
 
+    public List<Gruppe> findbyIDList (List<Integer> idList){
+        List<Gruppe> g = new ArrayList<>();
+        for ( Integer id:  idList) {
+            g.add(findByID(id).orElseThrow());
+        }
+        return  g;
+    }
     public boolean contains(Integer id ,Person person){
         return findByID(id).get().getPersonList().stream().
                 filter(person1 -> person1.getName().equals(person.getName())).toList().isEmpty();
@@ -33,7 +45,9 @@ public class GroupRepo {
         Gruppe gruppe = findByID(id).orElseThrow();
         if(gruppe.getRechnungList().isEmpty() && gruppe.getOpenStatus().equals(true) && contains(id,person)){
             gruppe.getPersonList().add(person);
+            person.getGroupIdList().add(id);
         }
+
     }
 
     public void addRechnung(Integer id, Rechnung rechnung){

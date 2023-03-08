@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RechnungList</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0/js/bootstrap-select.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+        href="../static/bootstrap.min.css" th:href="bootstrap.min.css">
+</head>
+<body>
+<h1>RechnungsDetails</h1>
+<br><br>
+
+<table class="table">
+ <thead>
+ <tr>
+   <th>Name</th>
+   <th>Geld</th>
+   <th>Payer</th>
+   <th>Person</th>
+ </tr>
+ </thead>
+
+
+ <tbody th:remove="all-but-first">
+ <tr th:each="rechnung : ${group.rechnungList}">
+   <td th:text="${rechnung.rechnungName}">1</td>
+   <td th:text="${rechnung.geld}">5000.00</td>
+   <td th:text="${rechnung.payer}">A</td>
+   <td th:text="${rechnung.persons}">A，B</td>
+ </tr>
+ </tbody>
+</table>
+
+<!-- <h2>AddPerson</h2>
+<form method="post" id="form2" th:action="@{/rechnungsDetails/{id}/(id=${id})}">
+    <label for="peropleid">PeopleId:</label>
+    <input id="peropleid" type="text" name="name" >
+    <button type="submit" form="form2">Abschicken</button>
+</form> -->
+
+
+
+<h2>AddRechnung</h2>
+<form method="post"  th:action="@{/rechnungsDetails/{id}/(id=${id})}" >
+    <label for="name">Name:</label>
+    <input  id="name" type="text" name="rechnungName" >
+    <br>
+    <br>
+    <label for="geld">Geld:</label>
+    <input id="geld" type="text" name="money">
+    <br>
+    <br>
+        <label for="payer" > Payer: </label>
+
+            <select id="payer"  name="payer">
+                <option th:each="payer : ${group.getPersonList()}"
+                        th:text="${payer.name}"
+                        th:value="${payer}">
+            </select>
+
+    <br>
+    <br>
+    <label for="personList" > PersonList: </label>
+       <input id="personList" type="checkbox"  th:each="person : ${group.getPersonList()}"
+              th:text="${person.name}"
+              th:value="${person.name}">
+
+
+    <br>
+    <br>
+    <!-- <label for="list"> PersonList:</label>
+    <input id="list" type="text" name="persons"> -->
+    <button type="submit" >Abschicken</button>
+</form>
+
+</body>
+
+</html>

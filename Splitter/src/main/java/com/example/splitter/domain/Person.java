@@ -1,5 +1,6 @@
 package com.example.splitter.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,13 +10,11 @@ public class Person {
     private List<Integer> groupIdList;
 
     public Person(String name) {
+        this.groupIdList = new ArrayList<>();
         this.name = name;
     }
 
-    public Person(String name, List<Integer> groupIdList) {
-        this.name = name;
-        this.groupIdList = groupIdList;
-    }
+
 
     public String getName() {
         return name;
@@ -31,5 +30,10 @@ public class Person {
 
     public void setGroupIdList(List<Integer> groupIdList) {
         this.groupIdList = groupIdList;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

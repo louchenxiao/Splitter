@@ -20,8 +20,13 @@ public class Ueberweisung {
         this.groupRepo = groupRepo;
     }
 
-    public void createGroup(Integer id,LocalDateTime localDateTime){
-        groupRepo.addNewGroup(id,localDateTime);
+
+    public Gruppe findByGroupId(Integer id){
+        return groupRepo.findByID(id).orElseThrow();
+    }
+
+    public void createGroup(Integer id,LocalDateTime localDateTime,Person person){
+        groupRepo.addNewGroup(id,localDateTime,person);
     }
 
     public void timeToClose(Integer id,LocalDateTime localDateTime) {
@@ -30,8 +35,13 @@ public class Ueberweisung {
         }
     }
 
+    public List<Gruppe> personGroupeList (Person person) {
+        return  groupRepo.findbyIDList(person.getGroupIdList());
+    }
+
     public void  addPerson (Integer id , Person person, LocalDateTime localDateTime) {
         timeToClose(id, localDateTime);
+        person.getGroupIdList().add(id);
         groupRepo.addPerson(id, person);
     }
 
@@ -39,6 +49,18 @@ public class Ueberweisung {
         timeToClose(id,localDateTime);
         groupRepo.addRechnung(id,rechnung);
     }
+
+    public Person findPersonByName( Integer id , String name){
+        return groupRepo.findByID(id).orElseThrow().getPersonList().stream().filter(e-> e.getName().equals(name)).findFirst().orElseThrow();
+    }
+    public Rechnung createRechnung(String name,Money money,Person Payer,List<Person> persons){
+        return new Rechnung(name,money,Payer,persons);
+    }
+
+    public Person createPerson(String name){
+        return new Person(name);
+    }
+
 
 
 
