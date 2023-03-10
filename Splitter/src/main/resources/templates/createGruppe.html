@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>add person</title>
+  <script>
+    function addName() {
+      var nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.name = "name[]";
+      nameInput.placeholder = "name";
+      document.getElementById("name-container").appendChild(nameInput);
+    }
+  </script>
+</head>
+<body>
+<h2>Create Group</h2>
+<form method="post" id="form2" th:action="@{/createGruppe/{name}/(name=${name})}">
+  <label for="gruppeName">GruppeName:</label>
+  <input  id="gruppeName" type="text" name="gruppeName" >
+  <div id="name-container">
+    <label for="name-container">Teilnehmer:</label>
+    <input type="text" name="name[]" placeholder="name">
+  </div>
+  <button type="button" onclick="addName()">add name</button>
+  <button type="submit">submit</button>
+</form>
+</body>
+</html>

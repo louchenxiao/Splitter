@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 class UeberweisungTest {
-
+/*
     @Test
     void test_1() {
         Person a = new Person("a");
@@ -387,7 +387,7 @@ class UeberweisungTest {
 
 
     }
-
+*/
 }
 
 

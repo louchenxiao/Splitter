@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Splitter.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Splitter.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.Splitter.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.Splitter.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/projekt_gruppe_44.iml" filepath="$PROJECT_DIR$/.idea/projekt_gruppe_44.iml" />
     </modules>
   </component>

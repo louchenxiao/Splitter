@@ -15,10 +15,10 @@
     <thead>
     <tr>
         <th>ID</th>
+        <th>name</th>
         <th>PersonList</th>
         <th>Status</th>
         <th>CreateTime </th>
-        <th>AddPerson</th>
         <th>RechnungDetails</th>
     </tr>
     </thead>
@@ -26,11 +26,10 @@
     <tbody th:remove="all-but-first">
     <tr th:each="p : ${groupList}">
         <td th:text="${p.id}">1</td>
+        <td th:text="${p.getName()}">name</td>
         <td th:text="${p.personList}">A ,B</td>
-        <td th:text="${p.openStatus}">Open </td>
+        <td th:text="${p.getGeschlossen()}">Open </td>
         <td th:text="${p.localDateTime}">2023.3.7</td>
-        <td> <a th:href="@{/addPerson/{id}/(id=${p.id})}"
-                th:text="Add">userName</a>  </td>
         <td> <a th:href="@{/rechnungsDetails/{id}/(id=${p.id})}"
            th:text="details">userName</a>  </td>
     </tr>
@@ -38,24 +37,8 @@
     </tbody>
 </table>
 
-
-<!--
-<br><br>
-
-<h2>AddRechnung</h2>
-
-<form method="post" th:action="">
-  <label for="rechnungname">RechnungName:</label>
-  <input id="rechnungname" type="text" name="text">
-  <br>
-  <label for="payer">Payer:</label>
-  <input id="payer" type="text" name="text">
-  <br>
-  <label for="personlist">PersonList:</label>
-  <input id="personlist" type="text" name="text">
-
-  <button type="submit">Abschicken</button>
-</form> -->
+<a th:href="@{/createGruppe/{name}/(name=${name})}"
+   th:text="createGruppe">create</a>
 
 
 </body>

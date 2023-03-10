@@ -21,13 +21,19 @@ public class GroupRepo {
         return gruppeList.stream().filter(gruppe -> gruppe.getId()==id).findAny();
     }
 
-
-    public void addNewGroup(Integer id, LocalDateTime localDateTime,Person person){
-        List<Person> personList = new ArrayList<>();
-        personList.add(person);
-        gruppeList.add(new Gruppe(id,personList,new ArrayList<>(),true,localDateTime));
-        person.getGroupIdList().add(id);
+    public boolean exist(Integer integer){
+        return gruppeList.stream().filter(e->e.getId().equals(integer)).toList().isEmpty();
     }
+
+    public Gruppe create(Integer integer, String name,List<Person> personList){
+        Gruppe gruppe = new Gruppe(integer, name, personList);
+        gruppeList.add(gruppe);
+        return gruppe;
+    }
+
+
+
+
 
     public List<Gruppe> findbyIDList (List<Integer> idList){
         List<Gruppe> g = new ArrayList<>();
@@ -41,25 +47,18 @@ public class GroupRepo {
                 filter(person1 -> person1.getName().equals(person.getName())).toList().isEmpty();
     }
 
-    public void addPerson(Integer id,Person person){
-        Gruppe gruppe = findByID(id).orElseThrow();
-        if(gruppe.getRechnungList().isEmpty() && gruppe.getOpenStatus().equals(true) && contains(id,person)){
-            gruppe.getPersonList().add(person);
-            person.getGroupIdList().add(id);
-        }
 
-    }
 
     public void addRechnung(Integer id, Rechnung rechnung){
         Gruppe gruppe = findByID(id).orElseThrow();
-        if(gruppe.getOpenStatus().equals(true)){
+        if(gruppe.getGeschlossen().equals(false)){
             gruppe.getRechnungList().add(rechnung);
         }
     }
 
     public void close(Integer id){
         Gruppe gruppe = findByID(id).orElseThrow();
-        gruppe.setOpenStatus();
+        gruppe.setGeschlossen();
     }
 
 

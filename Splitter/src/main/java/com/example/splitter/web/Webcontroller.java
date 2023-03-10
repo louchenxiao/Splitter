@@ -29,19 +29,13 @@ public class Webcontroller {
     public  String login(OAuth2AuthenticationToken auth, Model m){
         String login = auth.getPrincipal().getAttribute("login");
         m.addAttribute("name", login);
-       Person p = new Person(login);
-        Person p1 = new Person("wwww");
-       ueberweisung.createGroup(1, LocalDateTime.now(),p);
-       ueberweisung.createGroup(2, LocalDateTime.now(),p);
-        Rechnung rechnung = ueberweisung.createRechnung("a", Money.of(111, "EUR"), p1, List.of(p));
-        ueberweisung.addRechnung(1,rechnung,LocalDateTime.now());
-        ueberweisung.addPerson(1,p1,LocalDateTime.now());
-       m.addAttribute("person",p);
-       m.addAttribute("groupList",ueberweisung.personGroupeList(p));
+        Person p = ueberweisung.creatPerson(login);
+        m.addAttribute("person",p);
+        m.addAttribute("groupList",ueberweisung.personGroupeList(p));
 
 
        // System.out.println(m);
-        return "homepage";
+        return "homePage";
     }
 
     @GetMapping("/rechnungsDetails/{id}")
@@ -52,10 +46,6 @@ public class Webcontroller {
         return "rechnungsDetails" ;
     }
 
-    @GetMapping("/addPerson/{id}")
-    public String getPerson(@PathVariable("id") Integer id, Model model){
-        return "addPerson" ;
-    }
     @PostMapping("/rechnungsDetails/{id}")
     public String AddRechnung(  String rechnungName, String money,Person payer,Model model, @PathVariable("id") Integer gruppenId){
 
@@ -75,13 +65,21 @@ public class Webcontroller {
     }
 
 
-    @PostMapping("/addPerson/{id}")
-    public String addPerson(String name, Model model, @PathVariable("id") Integer gruppenId){
-        model.addAttribute("name",name);
-        Person person = ueberweisung.createPerson(name);
-        System.out.println(gruppenId);
-        ueberweisung.addPerson(gruppenId,person, LocalDateTime.now());
-        //System.out.println(model);
+
+    @GetMapping("/createGruppe/{name}")
+    public String createGruppe(Model model,@PathVariable("name") String name){
+        return "createGruppe";
+    }
+
+    @PostMapping("/createGruppe/{name}")
+    public String createGruppe(@PathVariable String name,String gruppeName,@RequestParam("name[]") List<String> names){
+        List<Person> personByList = ueberweisung.createPersonByList(names);
+        personByList.add(ueberweisung.creatPerson(name));
+        Gruppe group = ueberweisung.createGroup(gruppeName, personByList);
+        for (Person p:personByList) {
+            ueberweisung.addGruppeId(group.getId(), p);
+        }
+        System.out.println(group);
         return "redirect:/";
     }
 
