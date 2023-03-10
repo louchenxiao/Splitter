@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <title>homePage</title>
@@ -20,6 +20,7 @@
         <th>Status</th>
         <th>CreateTime </th>
         <th>RechnungDetails</th>
+        <th>Result</th>
     </tr>
     </thead>
 
@@ -32,6 +33,9 @@
         <td th:text="${p.localDateTime}">2023.3.7</td>
         <td> <a th:href="@{/rechnungsDetails/{id}/(id=${p.id})}"
            th:text="details">userName</a>  </td>
+
+        <td> <a th:href="@{/result/{id}/(id=${p.id})}"
+                th:text="result">userName</a>  </td>
     </tr>
 
     </tbody>

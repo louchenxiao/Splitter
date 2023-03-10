@@ -13,6 +13,7 @@ public class PersonRepo {
         return personList.stream().filter(e->e.getName().equals(name)).findAny().orElseThrow();
     }
 
+
     public boolean exit(String name){
         return !personList.stream().filter(e->e.getName().equals(name)).toList().isEmpty();
     }

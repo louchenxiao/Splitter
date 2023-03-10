@@ -27,7 +27,7 @@ public class PersonalBill {
 
     @Override
     public String toString() {
-        return "Mid{" +
+        return "PersonalBill{" +
                 "person=" + person +
                 ", geld=" + geld +
                 '}';

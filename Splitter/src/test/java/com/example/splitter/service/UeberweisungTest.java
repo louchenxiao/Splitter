@@ -4,11 +4,14 @@ import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
 import com.example.splitter.domain.Result;
 import com.example.splitter.repository.GroupRepo;
+import com.example.splitter.repository.PersonRepo;
+import com.example.splitter.repository.RechnungRepo;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -388,6 +391,26 @@ class UeberweisungTest {
 
     }
 */
+
+
+    @Test
+    @DisplayName("Money with 2 person")
+    void test_s11() {
+        Person a = new Person("1");
+        Person b = new Person("2");
+        List<Person> personList = List.of(a,b);
+        GroupRepo groupRepo =new GroupRepo();
+        PersonRepo personRepo =new PersonRepo();
+        RechnungRepo rechnungRepo =new RechnungRepo();
+        Ueberweisung ueberweisung = new Ueberweisung(groupRepo,personRepo,rechnungRepo);
+        List<PersonalBill> money = ueberweisung.money(personList);
+
+        assertThat(money).isEqualTo(List.of(new PersonalBill(a,Money.of(0.00,"EUR")),
+                new PersonalBill(b,Money.of(0.00,"EUR"))));
+
+
+    }
+
 }
 
 

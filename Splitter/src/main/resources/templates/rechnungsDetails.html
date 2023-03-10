@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <title>RechnungList</title>
@@ -23,7 +23,7 @@
 
 
  <tbody th:remove="all-but-first">
- <tr th:each="rechnung : ${group.rechnungList}">
+ <tr th:each="rechnung : ${allRechnung}">
    <td th:text="${rechnung.rechnungName}">1</td>
    <td th:text="${rechnung.geld}">5000.00</td>
    <td th:text="${rechnung.payer}">A</td>
@@ -32,12 +32,6 @@
  </tbody>
 </table>
 
-<!-- <h2>AddPerson</h2>
-<form method="post" id="form2" th:action="@{/rechnungsDetails/{id}/(id=${id})}">
-    <label for="peropleid">PeopleId:</label>
-    <input id="peropleid" type="text" name="name" >
-    <button type="submit" form="form2">Abschicken</button>
-</form> -->
 
 
 
@@ -52,27 +46,26 @@
     <br>
     <br>
         <label for="payer" > Payer: </label>
-
             <select id="payer"  name="payer">
                 <option th:each="payer : ${group.getPersonList()}"
-                        th:text="${payer.name}"
+                        th:text="${payer}"
                         th:value="${payer}">
             </select>
 
     <br>
     <br>
     <label for="personList" > PersonList: </label>
-       <input id="personList" type="checkbox"  th:each="person : ${group.getPersonList()}"
-              th:text="${person.name}"
-              th:value="${person.name}">
+    <input name="personList" id="personList" type="checkbox"  th:each="person : ${group.getPersonList()}"
+           th:text="${person}"
+           th:value="${person}">
 
 
     <br>
     <br>
-    <!-- <label for="list"> PersonList:</label>
-    <input id="list" type="text" name="persons"> -->
+
     <button type="submit" >Abschicken</button>
 </form>
+
 
 </body>
 

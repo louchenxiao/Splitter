@@ -49,12 +49,6 @@ public class GroupRepo {
 
 
 
-    public void addRechnung(Integer id, Rechnung rechnung){
-        Gruppe gruppe = findByID(id).orElseThrow();
-        if(gruppe.getGeschlossen().equals(false)){
-            gruppe.getRechnungList().add(rechnung);
-        }
-    }
 
     public void close(Integer id){
         Gruppe gruppe = findByID(id).orElseThrow();

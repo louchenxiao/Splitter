@@ -3,17 +3,13 @@ package com.example.splitter.web;
 import com.example.splitter.domain.Gruppe;
 import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
+import com.example.splitter.domain.Result;
 import com.example.splitter.service.Ueberweisung;
-import org.javamoney.moneta.Money;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -32,35 +28,26 @@ public class Webcontroller {
         Person p = ueberweisung.creatPerson(login);
         m.addAttribute("person",p);
         m.addAttribute("groupList",ueberweisung.personGroupeList(p));
-
-
-       // System.out.println(m);
         return "homePage";
     }
 
     @GetMapping("/rechnungsDetails/{id}")
-    public String getRechung(@PathVariable("id") Integer id, Model model){
-        Gruppe gruppe = ueberweisung.findByGroupId(id);
-        model.addAttribute("group",gruppe);
-        //System.out.println(model);
+    public String getRehung(@PathVariable("id") Integer id, Model model){
+        List<Rechnung> allRechnung = ueberweisung.getAllRechnung(id);
+        Gruppe group = ueberweisung.findByGroupId(id);
+        model.addAttribute("allRechnung",allRechnung);
+        model.addAttribute("group",group);
         return "rechnungsDetails" ;
     }
 
     @PostMapping("/rechnungsDetails/{id}")
-    public String AddRechnung(  String rechnungName, String money,Person payer,Model model, @PathVariable("id") Integer gruppenId){
-
-        model.addAttribute("rechnungName",rechnungName);
-        model.addAttribute("money",money );
-        model.addAttribute("payer",payer);
-        Gruppe byGroupId = ueberweisung.findByGroupId(gruppenId);
-        List<Person> personList = byGroupId.getPersonList();
-        long l = Long.parseLong(money);
-        Rechnung rechnung1 = ueberweisung.createRechnung(rechnungName, Money.of(l ,"EUR"), payer, personList);
-
-        //model.addAttribute("person",rechnung.getPersons());
-        System.out.println(model);
-        ueberweisung.addRechnung(gruppenId,rechnung1,LocalDateTime.now());
-        //System.out.println(model);
+    public String AddRechnung(String rechnungName,
+                              String money,String payer,
+                              @RequestParam(value = "personList", required = false) List<Person> personList,
+                              @PathVariable("id") Integer id){
+        Person person = ueberweisung.findPerson(payer);
+        Rechnung rechnung = ueberweisung.addRechnung(id, rechnungName, money, person, personList);
+        System.out.println(rechnung);
         return "redirect:/";
     }
 
@@ -82,6 +69,22 @@ public class Webcontroller {
         System.out.println(group);
         return "redirect:/";
     }
+
+    @GetMapping("/result/{id}")
+    public  @ResponseBody List<Result> getResult(@PathVariable Integer id, Model model){
+        List<Result> result = ueberweisung.result(id);
+        List<Person> personList = ueberweisung.findByGroupId(id).getPersonList();
+        List<Rechnung> rechnungList = ueberweisung.getAllRechnung(id);
+        List<Result> rrr =ueberweisung.second(ueberweisung.rechnen(personList,rechnungList)).stream().filter(e->!e.getMoney().isZero()).toList();
+        System.out.println(personList);
+        System.out.println(rechnungList);
+        System.out.println(ueberweisung.rechnen(personList,rechnungList));
+        System.out.println(rrr);
+        //model.addAttribute("result",result);
+        return result ;
+    }
+
+
 
 
 

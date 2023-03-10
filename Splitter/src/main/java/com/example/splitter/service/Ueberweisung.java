@@ -3,10 +3,12 @@ package com.example.splitter.service;
 import com.example.splitter.domain.*;
 import com.example.splitter.repository.GroupRepo;
 import com.example.splitter.repository.PersonRepo;
+import com.example.splitter.repository.RechnungRepo;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -15,10 +17,12 @@ import java.util.*;
 public class Ueberweisung {
     private GroupRepo groupRepo;
     private PersonRepo personRepo;
+    private RechnungRepo rechnungRepo;
 
-    public Ueberweisung(GroupRepo groupRepo,PersonRepo personRepo) {
+    public Ueberweisung(GroupRepo groupRepo,PersonRepo personRepo,RechnungRepo rechnungRepo) {
         this.groupRepo = groupRepo;
         this.personRepo = personRepo;
+        this.rechnungRepo= rechnungRepo;
     }
 
     public Gruppe findByGroupId(Integer id){
@@ -57,20 +61,6 @@ public class Ueberweisung {
         return groupRepo.findbyIDList(person.getGroupIdList());
     }
 
-
-    public void addRechnung(Integer id , Rechnung rechnung ,LocalDateTime localDateTime) {
-        timeToClose(id,localDateTime);
-        groupRepo.addRechnung(id,rechnung);
-    }
-
-    public Person findPersonByName( Integer id , String name){
-        return groupRepo.findByID(id).orElseThrow().getPersonList().stream().filter(e-> e.getName().equals(name)).findFirst().orElseThrow();
-    }
-    public Rechnung createRechnung(String name,Money money,Person Payer,List<Person> persons){
-        return new Rechnung(name,money,Payer,persons);
-    }
-
-
     public List<Person> createPersonByList(List<String> names){
         List<Person> personList = new ArrayList<>();
         for (String s:names) {
@@ -83,10 +73,19 @@ public class Ueberweisung {
         personRepo.addGruppe(integer,person);
     }
 
+    public List<Rechnung> getAllRechnung(Integer integer){
+        return rechnungRepo.findByGruppeId(integer);
+    }
+
+    public Rechnung addRechnung(Integer gruppeId,String name,String geld,Person payer,List<Person> personList){
+        Money money = Money.of(Long.parseLong(geld),"EUR");
+        return rechnungRepo.create(gruppeId,name,money,payer,personList);
+    }
 
 
 
-    private List<PersonalBill> money(List<Person> personList){
+
+    public List<PersonalBill> money(List<Person> personList){
         List<PersonalBill> money = new ArrayList<>();
         for (Person p :personList){
             money.add(new PersonalBill(p,Money.of(0,"EUR")));
@@ -140,7 +139,7 @@ public class Ueberweisung {
     public List<Result> result(Integer id){
         Gruppe gruppe = groupRepo.findByID(id).orElseThrow();
         List<Person> personList = gruppe.getPersonList();
-        List<Rechnung> rechnungList = gruppe.getRechnungList();
+        List<Rechnung> rechnungList = getAllRechnung(gruppe.getId());
         return second(rechnen(personList,rechnungList)).stream().filter(e->!e.getMoney().isZero()).toList();
     }
 
