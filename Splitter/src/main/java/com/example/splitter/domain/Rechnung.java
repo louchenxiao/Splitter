@@ -3,24 +3,19 @@ package com.example.splitter.domain;
 import org.javamoney.moneta.Money;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Rechnung {
-    private Integer gruppeId;
     private String rechnungName;
     private Money geld;
     private Person payer;
     private List<Person> persons;
 
-    public Rechnung(Integer gruppeId, String rechnungName, Money geld, Person payer, List<Person> persons) {
-        this.gruppeId = gruppeId;
+    public Rechnung(String rechnungName, Money geld, Person payer, List<Person> persons) {
         this.rechnungName = rechnungName;
         this.geld = geld;
         this.payer = payer;
         this.persons = persons;
-    }
-
-    public Integer getGruppeId() {
-        return gruppeId;
     }
 
     public String getRechnungName() {
@@ -39,11 +34,38 @@ public class Rechnung {
         return persons;
     }
 
+    public void setRechnungName(String rechnungName) {
+        this.rechnungName = rechnungName;
+    }
+
+    public void setGeld(Money geld) {
+        this.geld = geld;
+    }
+
+    public void setPayer(Person payer) {
+        this.payer = payer;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rechnung rechnung)) return false;
+        return Objects.equals(getRechnungName(), rechnung.getRechnungName()) && Objects.equals(getGeld(), rechnung.getGeld()) && Objects.equals(getPayer(), rechnung.getPayer()) && Objects.equals(getPersons(), rechnung.getPersons());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRechnungName(), getGeld(), getPayer(), getPersons());
+    }
+
     @Override
     public String toString() {
         return "Rechnung{" +
-                "gruppeId=" + gruppeId +
-                ", rechnungName='" + rechnungName + '\'' +
+                "rechnungName='" + rechnungName + '\'' +
                 ", geld=" + geld +
                 ", payer=" + payer +
                 ", persons=" + persons +

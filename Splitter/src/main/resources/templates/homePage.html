@@ -5,10 +5,15 @@
     <title>homePage</title>
     <link rel="stylesheet" type="text/css"
           href="../static/bootstrap.min.css" th:href="bootstrap.min.css">
+
 </head>
 <body>
 <H1>Hallo <span th:text="${name}">Otto</span></H1>
 <br><br>
+<br><br>
+
+<a th:href="@{/createGruppe/{name}/(name=${name})}"
+   th:text="createGruppe">create</a>
 <br><br>
 
 <table class="table">
@@ -17,32 +22,32 @@
         <th>ID</th>
         <th>name</th>
         <th>PersonList</th>
-        <th>Status</th>
-        <th>CreateTime </th>
+        <th>geschlossen</th>
         <th>RechnungDetails</th>
         <th>Result</th>
+        <th>Schliessen</th>
     </tr>
     </thead>
 
     <tbody th:remove="all-but-first">
     <tr th:each="p : ${groupList}">
         <td th:text="${p.id}">1</td>
-        <td th:text="${p.getName()}">name</td>
-        <td th:text="${p.personList}">A ,B</td>
-        <td th:text="${p.getGeschlossen()}">Open </td>
-        <td th:text="${p.localDateTime}">2023.3.7</td>
+        <td th:text="${p.name}">name</td>
+        <td th:text="${p.personen}">A ,B</td>
+        <td th:text="${p.geschlossen}">Open </td>
         <td> <a th:href="@{/rechnungsDetails/{id}/(id=${p.id})}"
            th:text="details">userName</a>  </td>
 
         <td> <a th:href="@{/result/{id}/(id=${p.id})}"
                 th:text="result">userName</a>  </td>
+        <td> <a th:href="@{/schliessen/{id}/(id=${p.id})}"
+                th:text="schliessen">userName</a>  </td>
     </tr>
 
     </tbody>
 </table>
 
-<a th:href="@{/createGruppe/{name}/(name=${name})}"
-   th:text="createGruppe">create</a>
+
 
 
 </body>

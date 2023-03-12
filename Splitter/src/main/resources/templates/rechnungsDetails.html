@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>RechnungList</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0/js/bootstrap-select.min.js"></script>
   <link rel="stylesheet" type="text/css"
         href="../static/bootstrap.min.css" th:href="bootstrap.min.css">
 </head>
@@ -47,7 +46,7 @@
     <br>
         <label for="payer" > Payer: </label>
             <select id="payer"  name="payer">
-                <option th:each="payer : ${group.getPersonList()}"
+                <option th:each="payer : ${group.getPersonen()}"
                         th:text="${payer}"
                         th:value="${payer}">
             </select>
@@ -55,7 +54,7 @@
     <br>
     <br>
     <label for="personList" > PersonList: </label>
-    <input name="personList" id="personList" type="checkbox"  th:each="person : ${group.getPersonList()}"
+    <input name="personList" id="personList" type="checkbox"  th:each="person : ${group.getPersonen()}"
            th:text="${person}"
            th:value="${person}">
 

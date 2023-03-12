@@ -7,7 +7,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.7.6/ef52bd1c96c4b04f3fe6c72a6108a3bea24f966f/spring-boot-configuration-processor-2.7.6.jar" />
         </processorPath>
-        <module name="Splitter.main" />
+        <module name="44.Splitter.main" />
       </profile>
     </annotationProcessing>
   </component>

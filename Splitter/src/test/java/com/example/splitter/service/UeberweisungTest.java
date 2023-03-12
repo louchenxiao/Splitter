@@ -1,79 +1,68 @@
 package com.example.splitter.service;
-import com.example.splitter.domain.PersonalBill;
-import com.example.splitter.domain.Person;
-import com.example.splitter.domain.Rechnung;
-import com.example.splitter.domain.Result;
+import com.example.splitter.domain.*;
 import com.example.splitter.repository.GroupRepo;
 import com.example.splitter.repository.PersonRepo;
-import com.example.splitter.repository.RechnungRepo;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 class UeberweisungTest {
-/*
+
+
+
     @Test
     void test_1() {
+
         Person a = new Person("a");
         Person b = new Person("b");
         Person c = new Person("c");
 
-        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"), a, List.of(a, b));
-        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"), a, List.of(a, c));
+        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"),a, List.of(a, b));
+        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"),a, List.of(a, c));
 
-        GroupRepo groupRepo = new GroupRepo();
+        List<Person> personList = List.of(a,b,c);
+        List<Rechnung> rechnungList = List.of(r1,r2);
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
-
-
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-        u.addPerson(1, c, LocalDateTime.now());
-
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-
-        List<Person> personList = groupRepo.findByID(1).orElseThrow().getPersonList();
-        List<Rechnung> rechnungList = groupRepo.findByID(1).orElseThrow().getRechnungList();
-
+        Ueberweisung u = new Ueberweisung();
 
         assertThat(u.rechnen(personList, rechnungList)).isEqualTo(List.of(new PersonalBill(a, Money.of(50, "EUR")),
                 new PersonalBill(b, Money.of(-25, "EUR")), new PersonalBill(c, Money.of(-25, "EUR"))));
     }
 
+
+
     @Test
     @DisplayName("Szenario 1: Summieren von Auslagen")
     void test_s1() {
+
+
         Person a = new Person("a");
         Person b = new Person("b");
         Rechnung r1 = new Rechnung("1", Money.of(10, "EUR"), a, List.of(a, b));
         Rechnung r2 = new Rechnung("2", Money.of(20, "EUR"), a, List.of(a, b));
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
 
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(new Result(a, b, Money.of(15, "EUR"))));
 
 
     }
+
+
+
 
     @Test
     @DisplayName("Szenario 2: Ausgleich")
@@ -83,23 +72,17 @@ class UeberweisungTest {
         Rechnung r1 = new Rechnung("1", Money.of(10, "EUR"), a, List.of(a, b));
         Rechnung r2 = new Rechnung("2", Money.of(20, "EUR"), b, List.of(a, b));
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-
-
-
-        List<Result> results = u.result(1);
+        Ueberweisung u = new Ueberweisung();
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(new Result(b, a, Money.of(5, "EUR"))));
     }
+
 
     @Test
     @DisplayName("Szenario 3: Zahlung ohne eigene Beteiligung")
@@ -109,19 +92,14 @@ class UeberweisungTest {
         Rechnung r1 = new Rechnung("1", Money.of(10, "EUR"), a, List.of(b));
         Rechnung r2 = new Rechnung("2", Money.of(20, "EUR"), a, List.of(a, b));
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
 
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-
-
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(new Result(a, b, Money.of(20, "EUR"))));
     }
@@ -136,21 +114,16 @@ class UeberweisungTest {
         Rechnung r2 = new Rechnung("2", Money.of(10, "EUR"), b, List.of(c, b));
         Rechnung r3 = new Rechnung("3", Money.of(10, "EUR"), c, List.of(a, c));
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-        u.addPerson(1, c, LocalDateTime.now());
-
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-        u.addRechnung(1, r3, LocalDateTime.now());
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
+        group1.getRechnungList().add(r3);
 
 
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of());
     }
@@ -165,21 +138,15 @@ class UeberweisungTest {
         Rechnung r2 = new Rechnung("2", Money.of(30, "EUR"), b, List.of(a, c, b));
         Rechnung r3 = new Rechnung("3", Money.of(100, "EUR"), c, List.of(b, c));
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-        u.addPerson(1, c, LocalDateTime.now());
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
+        group1.getRechnungList().add(r3);
 
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-        u.addRechnung(1, r3, LocalDateTime.now());
-
-
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(new Result(a, b, Money.of(30, "EUR")), new Result(c, b, Money.of(20, "EUR"))));
     }
@@ -201,28 +168,18 @@ class UeberweisungTest {
         Rechnung r6 = new Rechnung("Theatervorstellung", Money.of(95.37, "EUR"), f, List.of(b, e, f));
 
 
-        GroupRepo groupRepo = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c,d,e,f));
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-        u.addPerson(1, c, LocalDateTime.now());
-        u.addPerson(1, d, LocalDateTime.now());
-        u.addPerson(1, e, LocalDateTime.now());
-        u.addPerson(1, f, LocalDateTime.now());
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
+        group1.getRechnungList().add(r3);
+        group1.getRechnungList().add(r4);
+        group1.getRechnungList().add(r5);
+        group1.getRechnungList().add(r6);
 
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-        u.addRechnung(1, r3, LocalDateTime.now());
-        u.addRechnung(1, r4, LocalDateTime.now());
-        u.addRechnung(1, r5, LocalDateTime.now());
-        u.addRechnung(1, r6, LocalDateTime.now());
-
-
-
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(
                 new Result(a, b, Money.of(96.78, "EUR")),
@@ -254,93 +211,56 @@ class UeberweisungTest {
         Rechnung r8 = new Rechnung("8", Money.of(30, "EUR"), g, List.of(a));
 
 
-        GroupRepo u1 = new GroupRepo();
+        Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c,d,e,f,g));
 
-        Ueberweisung u = new Ueberweisung(u1);
-        u.createGroup(1, LocalDateTime.now(),a);
+        Ueberweisung u = new Ueberweisung();
 
-        u.addPerson(1, a, LocalDateTime.now());
-        u.addPerson(1, b, LocalDateTime.now());
-        u.addPerson(1, c, LocalDateTime.now());
-        u.addPerson(1, d, LocalDateTime.now());
-        u.addPerson(1, e, LocalDateTime.now());
-        u.addPerson(1, f, LocalDateTime.now());
-        u.addPerson(1, g, LocalDateTime.now());
-
-        u.addRechnung(1, r1, LocalDateTime.now());
-        u.addRechnung(1, r2, LocalDateTime.now());
-        u.addRechnung(1, r3, LocalDateTime.now());
-        u.addRechnung(1, r4, LocalDateTime.now());
-        u.addRechnung(1, r5, LocalDateTime.now());
-        u.addRechnung(1, r6, LocalDateTime.now());
-        u.addRechnung(1, r7, LocalDateTime.now());
-        u.addRechnung(1, r8, LocalDateTime.now());
+        group1.getRechnungList().add(r1);
+        group1.getRechnungList().add(r2);
+        group1.getRechnungList().add(r3);
+        group1.getRechnungList().add(r4);
+        group1.getRechnungList().add(r5);
+        group1.getRechnungList().add(r6);
+        group1.getRechnungList().add(r7);
+        group1.getRechnungList().add(r8);
 
 
-        List<Result> results = u.result(1);
+        List<Result> results = u.result(group1);
         System.out.println(results);
 
         assertThat(results).isEqualTo(List.of());
     }
 
-    @Test
-    @DisplayName("cant add people after adding first rechnung")
-    void test_s8() {
-        Person a = new Person("a");
-        Person b = new Person("b");
-        Person c = new Person("c");
-        Person d = new Person("d");
-        Person e = new Person("e");
-        Person f = new Person("f");
-        Person h = new Person("h");
-        Rechnung r1 = new Rechnung("Hotelzimmer", Money.of(564, "EUR"), a, List.of(a, b, c, d, e, f));
 
-
-        GroupRepo groupRepo = new GroupRepo();
-
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
-
-        u.addPerson(1, a,LocalDateTime.now());
-        u.addPerson(1, b,LocalDateTime.now());
-        u.addPerson(1, c,LocalDateTime.now());
-        u.addPerson(1, d,LocalDateTime.now());
-        u.addPerson(1, e,LocalDateTime.now());
-        groupRepo.addPerson(1, f);
-
-        groupRepo.addRechnung(1, r1);
-
-
-        groupRepo.addPerson(1, h);
-
-
-        assertThat(groupRepo.findByID(1).orElseThrow().getPersonList()).isEqualTo(List.of(a, b, c, d, e, f));
-
-    }
+/*
 
     @Test
-    @DisplayName("Dieselbe Person kann nicht wiederholt hinzugefügt werden")
-    void test_s9() {
-        Person a = new Person("a");
+    void test_50() {
 
-        Rechnung r1 = new Rechnung("Hotelzimmer", Money.of(564, "EUR"), a, List.of(a));
-
-
-
+        PersonRepo personRepo = new PersonRepo();
+        PersonService personService = new PersonService(personRepo);
+        Person a = personService.creatPerson("a");
+        Person b = personService.creatPerson("b");
+        Person c = personService.creatPerson("c");
+        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"),a, List.of(a, b));
+        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"),a, List.of(a, c));
         GroupRepo groupRepo = new GroupRepo();
+        GroupService groupService = new GroupService(groupRepo);
+        Gruppe group1 = groupService.create("group1",personRepo.findAll());
+        Integer id = group1.getId();
+        groupService.addRechnung(id,r1);
+        groupService.addRechnung(id,r2);
 
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
-        u.addPerson(1, a,LocalDateTime.now());
-        u.addPerson(1, a,LocalDateTime.now());
-        u.addPerson(1, a,LocalDateTime.now());
+        Ueberweisung u = new Ueberweisung();
 
-        groupRepo.addRechnung(1, r1);
-
-        assertThat(groupRepo.findByID(1).orElseThrow().getPersonList()).isEqualTo(List.of(a));
+        List<Person> personList = groupService.findByGroupId(id).getPersonen();
+        List<Rechnung> rechnungList = groupService.findByGroupId(id).getRechnungList();
 
 
+        assertThat(u.rechnen(personList, rechnungList)).isEqualTo(List.of(new PersonalBill(a, Money.of(50, "EUR")),
+                new PersonalBill(b, Money.of(-25, "EUR")), new PersonalBill(c, Money.of(-25, "EUR"))));
     }
+
     @Test
     @DisplayName("Jeder kann die Gruppe schließen")
     void test_s10() {
@@ -393,23 +313,6 @@ class UeberweisungTest {
 */
 
 
-    @Test
-    @DisplayName("Money with 2 person")
-    void test_s11() {
-        Person a = new Person("1");
-        Person b = new Person("2");
-        List<Person> personList = List.of(a,b);
-        GroupRepo groupRepo =new GroupRepo();
-        PersonRepo personRepo =new PersonRepo();
-        RechnungRepo rechnungRepo =new RechnungRepo();
-        Ueberweisung ueberweisung = new Ueberweisung(groupRepo,personRepo,rechnungRepo);
-        List<PersonalBill> money = ueberweisung.money(personList);
-
-        assertThat(money).isEqualTo(List.of(new PersonalBill(a,Money.of(0.00,"EUR")),
-                new PersonalBill(b,Money.of(0.00,"EUR"))));
-
-
-    }
 
 }
 

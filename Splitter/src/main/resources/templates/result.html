@@ -10,15 +10,19 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Result</th>
+        <th>receiver</th>
+        <th>Giver</th>
+        <th>Money</th>
 
     </tr>
     </thead>
 
 
     <tbody th:remove="all-but-first">
-    <tr th:each="rechnung : ${allRechnung}">
-        <td th:text="${rechnung.rechnungName}">1</td>
+    <tr th:each="r : ${result}">
+        <td th:text="${r.receiver}">1</td>
+        <td th:text="${r.giver}">1</td>
+        <td th:text="${r.money}">1</td>
 
     </tr>
     </tbody>

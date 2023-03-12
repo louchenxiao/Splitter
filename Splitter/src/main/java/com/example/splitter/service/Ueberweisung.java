@@ -1,90 +1,15 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.*;
-import com.example.splitter.repository.GroupRepo;
-import com.example.splitter.repository.PersonRepo;
-import com.example.splitter.repository.RechnungRepo;
 import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
 
-import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class Ueberweisung {
-    private GroupRepo groupRepo;
-    private PersonRepo personRepo;
-    private RechnungRepo rechnungRepo;
-
-    public Ueberweisung(GroupRepo groupRepo,PersonRepo personRepo,RechnungRepo rechnungRepo) {
-        this.groupRepo = groupRepo;
-        this.personRepo = personRepo;
-        this.rechnungRepo= rechnungRepo;
-    }
-
-    public Gruppe findByGroupId(Integer id){
-        return groupRepo.findByID(id).orElseThrow();
-    }
-
-    public Person findPerson(String name){
-        return personRepo.findByName(name);
-    }
-
-    public Person creatPerson(String name){
-        if(personRepo.exit(name)){
-            return findPerson(name);
-        }
-        else {
-            Person person = new Person(name);
-            personRepo.save(person);
-            return person;
-        }
-
-    }
-
-    public Gruppe createGroup(String name,List<Person> personList){
-        Random random = new Random();
-        Integer integer = random.nextInt(100);
-        return groupRepo.create(integer,name,personList);
-    }
-
-    public void timeToClose(Integer id,LocalDateTime localDateTime) {
-        if ((localDateTime.isAfter(groupRepo.findByID(id).orElseThrow().getLocalDateTime().plusDays(7)))) {
-            groupRepo.close(id);
-        }
-    }
-
-    public List<Gruppe> personGroupeList (Person person) {
-        return groupRepo.findbyIDList(person.getGroupIdList());
-    }
-
-    public List<Person> createPersonByList(List<String> names){
-        List<Person> personList = new ArrayList<>();
-        for (String s:names) {
-            personList.add(creatPerson(s));
-        }
-        return personList;
-    }
-
-    public void addGruppeId(Integer integer,Person person){
-        personRepo.addGruppe(integer,person);
-    }
-
-    public List<Rechnung> getAllRechnung(Integer integer){
-        return rechnungRepo.findByGruppeId(integer);
-    }
-
-    public Rechnung addRechnung(Integer gruppeId,String name,String geld,Person payer,List<Person> personList){
-        Money money = Money.of(Long.parseLong(geld),"EUR");
-        return rechnungRepo.create(gruppeId,name,money,payer,personList);
-    }
-
-
-
-
     public List<PersonalBill> money(List<Person> personList){
         List<PersonalBill> money = new ArrayList<>();
         for (Person p :personList){
@@ -104,17 +29,13 @@ public class Ueberweisung {
                     Money geld = m.getGeld();
                     m.setGeld(r.getGeld().add(geld));
                 }
-                if(r.getPersons().contains(m.getPerson())){
+                if(r.getPersons().stream().map(person -> person.getName()).toList().contains(m.getPerson().getName())){
                     m.setGeld(m.getGeld().subtract(each));
                 }
             }
         }
         return money;
     }
-
-
-
-
 
     public List<Result> second(List<PersonalBill> personalBillList){
         List<PersonalBill> receiver= personalBillList.stream().filter(e -> e.getGeld().isPositive()).toList();
@@ -136,10 +57,9 @@ public class Ueberweisung {
         return results;
     }
 
-    public List<Result> result(Integer id){
-        Gruppe gruppe = groupRepo.findByID(id).orElseThrow();
-        List<Person> personList = gruppe.getPersonList();
-        List<Rechnung> rechnungList = getAllRechnung(gruppe.getId());
+    public List<Result> result(Gruppe gruppe){
+        List<Person> personList = gruppe.getPersonen();
+        List<Rechnung> rechnungList = gruppe.getRechnungList();
         return second(rechnen(personList,rechnungList)).stream().filter(e->!e.getMoney().isZero()).toList();
     }
 
