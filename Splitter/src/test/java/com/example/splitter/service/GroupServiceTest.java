@@ -3,13 +3,11 @@ package com.example.splitter.service;
 import com.example.splitter.domain.Gruppe;
 import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
-import com.example.splitter.repository.GroupRepo;
-import com.example.splitter.repository.PersonRepo;
+import com.example.splitter.repository.GroupRepoImpl;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -19,7 +17,7 @@ public class GroupServiceTest {
     @Test
     @DisplayName("ob rechnunglist richtig")
     void test_1() {
-        GroupRepo groupRepo = new GroupRepo();
+        GroupRepo groupRepo = new GroupRepoImpl();
         GroupService groupService = new GroupService(groupRepo);
 
         Person a = new Person("a");
@@ -40,7 +38,7 @@ public class GroupServiceTest {
     @Test
     @DisplayName("ob group off")
     void test_2() {
-        GroupRepo groupRepo = new GroupRepo();
+        GroupRepo groupRepo = new GroupRepoImpl();
         GroupService groupService = new GroupService(groupRepo);
 
         Person a = new Person("a");
@@ -60,7 +58,7 @@ public class GroupServiceTest {
     @Test
     @DisplayName("get all gouplist from idlist")
     void test_3() {
-        GroupRepo groupRepo = new GroupRepo();
+        GroupRepo groupRepo = new GroupRepoImpl();
         GroupService groupService = new GroupService(groupRepo);
         Person a = new Person("a");
         Person b = new Person("b");

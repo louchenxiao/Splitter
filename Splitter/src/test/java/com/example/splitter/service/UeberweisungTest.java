@@ -1,13 +1,10 @@
 package com.example.splitter.service;
 import com.example.splitter.domain.*;
-import com.example.splitter.repository.GroupRepo;
-import com.example.splitter.repository.PersonRepo;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 

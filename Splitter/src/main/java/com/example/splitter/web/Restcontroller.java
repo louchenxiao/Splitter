@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 @RestController
 public class Restcontroller {
-
-
     private GroupService groupService;
     private PersonService personService;
     private Ueberweisung ueberweisung;

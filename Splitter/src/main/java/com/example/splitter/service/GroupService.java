@@ -3,14 +3,11 @@ package com.example.splitter.service;
 import com.example.splitter.domain.Gruppe;
 import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
-import com.example.splitter.repository.GroupRepo;
-import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 public class GroupService {

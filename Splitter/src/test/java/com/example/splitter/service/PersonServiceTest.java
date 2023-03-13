@@ -1,12 +1,10 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Person;
-import com.example.splitter.repository.PersonRepo;
+import com.example.splitter.repository.PersonRepoImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -16,7 +14,7 @@ public class PersonServiceTest {
     @Test
     @DisplayName("ob person in personList add")
     void test_1() {
-        PersonRepo personRepo = new PersonRepo();
+        PersonRepo personRepo = new PersonRepoImpl();
         PersonService personService = new PersonService(personRepo);
         Person person1 = personService.creatPerson("a");
         assertThat(personService.findPerson("a")).isEqualTo(person1);
@@ -26,7 +24,7 @@ public class PersonServiceTest {
     @Test
     @DisplayName("ob gleiche person in personList add")
     void test_2() {
-        PersonRepo personRepo = new PersonRepo();
+        PersonRepo personRepo = new PersonRepoImpl();
         PersonService personService = new PersonService(personRepo);
         personService.creatPerson("a");
         personService.creatPerson("a");
@@ -37,7 +35,7 @@ public class PersonServiceTest {
     @Test
     @DisplayName("get personlist from stringlist")
     void test_3() {
-        PersonRepo personRepo = new PersonRepo();
+        PersonRepo personRepo = new PersonRepoImpl();
         PersonService personService = new PersonService(personRepo);
         personService.creatPerson("a");
         personService.creatPerson("b");

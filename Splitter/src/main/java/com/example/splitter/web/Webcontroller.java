@@ -4,7 +4,6 @@ import com.example.splitter.domain.Gruppe;
 import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
 import com.example.splitter.domain.Result;
-import com.example.splitter.repository.PersonRepo;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
 import com.example.splitter.service.Ueberweisung;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class Webcontroller {

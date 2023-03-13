@@ -1,14 +1,13 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Person;
-import com.example.splitter.repository.PersonRepo;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-@Repository
+@Service
 public class PersonService {
     private PersonRepo personRepo;
 
