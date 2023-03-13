@@ -15,19 +15,12 @@ public class WebSecurityConfiguration{
                     configurer -> configurer
                             .antMatchers("/css/*").permitAll()
                             .antMatchers("/api/**").permitAll()
-
+                            .anyRequest().authenticated()
             )
-            .csrf().disable();
-    chainBuilder.authorizeHttpRequests(
-            configurer -> configurer
-                    //.antMatchers("/css/*").permitAll()
-                    //.antMatchers("/api/**").permitAll()
-                    .anyRequest().authenticated()
-    ).oauth2Login();
-
-
+            .oauth2Login();
+    chainBuilder.csrf().disable();
     return chainBuilder.build();
+  }
 
 
   }
-}

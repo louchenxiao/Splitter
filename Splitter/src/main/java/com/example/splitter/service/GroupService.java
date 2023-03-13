@@ -24,6 +24,18 @@ public class GroupService {
         return groupRepo.findByID(id).orElseThrow();
     }
 
+    public Integer check(String s){
+        try {
+            return Integer.parseInt(s);
+
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    public boolean check(Integer id){
+        return !groupRepo.findAll().stream().filter(gruppe -> gruppe.getId()==id).toList().isEmpty();
+    }
     public Gruppe create(String name,List<Person> personen){
         Random random = new Random();
         Gruppe gruppe = new Gruppe(random.nextInt(100), name, personen);
@@ -31,6 +43,10 @@ public class GroupService {
         return gruppe;
     }
 
+    public boolean getStatus (Integer id) {
+        return  findByGroupId(id).getGeschlossen();
+
+    }
 
     public void addRechnung(Integer id,Rechnung rechnung){
         if (!findByGroupId(id).getGeschlossen()) {
@@ -47,7 +63,7 @@ public class GroupService {
     }
 
     public void closeGruppe(Integer id){
-        Gruppe gruppe = groupRepo.findByID(id).orElseThrow();
+        Gruppe gruppe = findByGroupId(id);
         gruppe.setGeschlossen();
     }
 }
