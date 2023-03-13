@@ -13,3 +13,15 @@ spring:
             client-id: ${CLIENT_ID}
             client-secret: ${CLIENT_SECRET}
             scope: read:public_repo
+
+flyway:
+  schemas: Splitter
+  create-schemas: true
+  url: jdbc:postgresql://localhost:4321/Splitter
+  user: theuser
+  password: thepassword
+
+  datasource:
+    url: jdbc:postgresql://localhost:4321/Splitter
+    username: theuser
+    password: thepassword

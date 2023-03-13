@@ -74,9 +74,7 @@ class WebcontrollerTest {
     @DisplayName("Status ist 200 and ok")
     @WithMockOAuth2User(login = "Erwin_Lindemann")
     void loginSuccess() throws Exception {
-
         Person mockPerson = mock(Person.class);
-
 
         when(personService.creatPerson("Erwin_Lindemann")).thenReturn(mockPerson);
         when(groupService.getAllGruppe(any())).thenReturn(List.of());
@@ -137,7 +135,7 @@ class WebcontrollerTest {
                 .addRechnung(33,new Rechnung("Tour", Money.of(100,"EUR"),any(),any()));
 
         String redirectedUrl = mvcResult.getResponse().getRedirectedUrl();
-        assertThat(redirectedUrl).isEqualTo("/");
+        assertThat(redirectedUrl).isEqualTo("/rechnungsDetails/33");
 
     }
 

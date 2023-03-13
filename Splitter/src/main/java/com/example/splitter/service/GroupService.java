@@ -34,10 +34,13 @@ public class GroupService {
         return !groupRepo.findAll().stream().filter(gruppe -> gruppe.getId()==id).toList().isEmpty();
     }
     public Gruppe create(String name,List<Person> personen){
-        Random random = new Random();
-        Gruppe gruppe = new Gruppe(random.nextInt(100), name, personen);
+        Gruppe gruppe = new Gruppe(findAll().size()+1, name, personen);
         groupRepo.save(gruppe);
         return gruppe;
+    }
+
+    public List<Gruppe> findAll(){
+        return groupRepo.findAll();
     }
 
     public boolean getStatus (Integer id) {

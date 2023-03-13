@@ -12,15 +12,16 @@ public class WebSecurityConfiguration{
   @Bean
   public SecurityFilterChain configure(HttpSecurity chainBuilder) throws Exception {
     chainBuilder.authorizeHttpRequests(
-                    configurer -> configurer
-                            .antMatchers("/css/*").permitAll()
-                            .antMatchers("/api/**").permitAll()
-                            .anyRequest().authenticated()
-            )
-            .oauth2Login();
-    chainBuilder.csrf().disable();
+            configurer -> configurer
+                    .antMatchers("/css/*").permitAll()
+                    .antMatchers("/api/**").permitAll()
+
+    ).csrf().disable();
+
+
+    chainBuilder.authorizeHttpRequests(
+            configure ->configure.anyRequest().authenticated()
+    ).oauth2Login();
     return chainBuilder.build();
   }
-
-
-  }
+}

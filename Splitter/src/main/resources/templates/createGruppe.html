@@ -18,6 +18,7 @@
 <form method="post" id="form2" th:action="@{/createGruppe/{name}/(name=${name})}">
   <label for="gruppeName">GruppeName:</label>
   <input  id="gruppeName" type="text" name="gruppeName" >
+  <small class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</small>
   <div id="name-container">
     <label for="name-container">Teilnehmer:</label>
     <input type="text" name="name[]" placeholder="name">

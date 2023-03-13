@@ -57,13 +57,13 @@
     <input name="personList" id="personList" type="checkbox"  th:each="person : ${group.getPersonen()}"
            th:text="${person}"
            th:value="${person}">
-
-
     <br>
     <br>
-
     <button type="submit" >Abschicken</button>
 </form>
+
+<a th:href="@{/}"
+   th:text="homePage">back</a>
 
 
 </body>

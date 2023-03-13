@@ -1,9 +1,6 @@
 package com.example.splitter.web;
 
-import com.example.splitter.domain.Gruppe;
-import com.example.splitter.domain.Person;
-import com.example.splitter.domain.Rechnung;
-import com.example.splitter.domain.Result;
+import com.example.splitter.domain.*;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
 import com.example.splitter.service.Ueberweisung;
@@ -11,8 +8,14 @@ import org.javamoney.moneta.Money;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
@@ -36,7 +39,7 @@ public class Webcontroller {
         List<Gruppe> allGruppe = groupService.getAllGruppe(person.getGroupIdList());
         m.addAttribute("person",person);
         m.addAttribute("groupList",allGruppe);
-        return "homepage";
+        return "homePage";
     }
 
     @GetMapping("/rechnungsDetails/{id}")
@@ -54,8 +57,11 @@ public class Webcontroller {
                               @RequestParam(value = "personList", required = false) List<Person> personList,
                               @PathVariable("id") Integer id){
         Person person = personService.findPerson(payer);
+        if (rechnungName.isEmpty()||rechnungName.isBlank()||personList.isEmpty()){
+            return "redirect:/rechnungsDetails/{id}";
+        }
         groupService.addRechnung(id,new Rechnung(rechnungName, Money.of(Long.parseLong(money),"EUR"),person,personList));
-        return "redirect:/";
+        return "redirect:/rechnungsDetails/{id}";
     }
 
 
@@ -66,9 +72,16 @@ public class Webcontroller {
     }
 
     @PostMapping("/createGruppe/{name}")
-    public String createGruppe(@PathVariable String name,String gruppeName,@RequestParam("name[]") List<String> names){
+    public String createGruppe(@PathVariable String name, String gruppeName, @RequestParam("name[]") List<String> names){
+        List<String> strings = names.stream().filter(e -> !e.isEmpty()).filter(e -> !e.isBlank()).toList();
+        if (strings.size()==0){
+            return "redirect:/createGruppe/{name}";
+        }
+        if (gruppeName.isEmpty()||gruppeName.isBlank()){
+            return "redirect:/createGruppe/{name}";
+        }
         Person person = personService.findPerson(name);
-        List<Person> personByList = personService.createPersonByList(names);
+        List<Person> personByList = personService.createPersonByList(strings);
         personByList.add(person);
         Gruppe gruppe = groupService.create(gruppeName, personByList);
         for (Person p:personByList) {
