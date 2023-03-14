@@ -6,7 +6,7 @@ import com.example.splitter.domain.Rechnung;
 import com.example.splitter.domain.Result;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
-import com.example.splitter.service.Ueberweisung;
+import com.example.splitter.service.SplitterService;
 import com.example.splitter.web.ApiRecord.ApiAusgleich;
 import com.example.splitter.web.ApiRecord.ApiGruppeInfo;
 import com.example.splitter.web.ApiRecord.Auslage;
@@ -21,22 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 @RestController
 public class Restcontroller {
-    private GroupService groupService;
-    private PersonService personService;
-    private Ueberweisung ueberweisung;
+    private final GroupService groupService;
+    private final PersonService personService;
+    private final SplitterService splitterService;
 
-    public Restcontroller(GroupService groupService, PersonService personService, Ueberweisung ueberweisung) {
+    public Restcontroller(GroupService groupService, PersonService personService, SplitterService splitterService) {
         this.groupService = groupService;
         this.personService = personService;
-        this.ueberweisung = ueberweisung;
+        this.splitterService = splitterService;
     }
 
     @PostMapping("/api/gruppen")
     public ResponseEntity<String> createGruppe(@RequestBody CreateGruppe createGruppe) {
-
         List<Person> personList = new ArrayList<>();
-
-
 
         if (createGruppe.name()==null||createGruppe.personen()==null||createGruppe.personen().length==0){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -54,7 +51,7 @@ public class Restcontroller {
     }
 
     @PostMapping("/api/gruppen/{id}/auslagen")
-    public ResponseEntity<String> getauslagen(@RequestBody Auslage auslage, @PathVariable("id") String id){
+    public ResponseEntity<String> getAuslagen(@RequestBody Auslage auslage, @PathVariable("id") String id){
         Integer check = groupService.check(id);
         if (check==-1){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -85,13 +82,9 @@ public class Restcontroller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Gruppe byGroupId = groupService.findByGroupId(check);
-        if (byGroupId==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
 
         List<ApiAusgleich> apiAusgleiches =new ArrayList<>();
-        List<Result> result = ueberweisung.result(byGroupId);
+        List<Result> result = splitterService.result(byGroupId);
         for (Result r:result) {
             apiAusgleiches.add(new ApiAusgleich(r.getGiver().getName(),r.getReceiver().getName(), r.getMoney().getNumber().intValue()));
         }
@@ -115,31 +108,26 @@ public class Restcontroller {
 
     @GetMapping("/api/gruppen/{id}")
     public ResponseEntity<ApiGruppeInfo> getAllGruppeInfo(@PathVariable("id") String id){
-
         Integer check = groupService.check(id);
         if (check==-1){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         Gruppe byGroupId = groupService.findByGroupId(check);
-        if (byGroupId==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         List<String> personList = new ArrayList<>();
         for (Person p : byGroupId.getPersonen()) {
             personList.add(p.getName());
         }
 
-        List<Auslage> auslages =new ArrayList<>();
+        List<Auslage> auslagen =new ArrayList<>();
 
         for (Rechnung r:byGroupId.getRechnungList()) {
-            auslages.add(new Auslage(r.getRechnungName(),r.getPayer().getName(),r.getGeld().getNumber().intValue(),r.getPersons().stream()
-                    .map(person -> person.getName()).collect(Collectors.toSet())));
+            auslagen.add(new Auslage(r.rechnungName(),r.payer().getName(),r.geld().getNumber().intValue(),r.persons().stream()
+                    .map(Person::getName).collect(Collectors.toSet())));
         }
 
 
         return new ResponseEntity<>(new ApiGruppeInfo(byGroupId.getId().toString(),byGroupId.getName()
-                ,personList,byGroupId.getGeschlossen(),auslages),HttpStatus.OK);
+                ,personList,byGroupId.getGeschlossen(),auslagen),HttpStatus.OK);
     }
 }

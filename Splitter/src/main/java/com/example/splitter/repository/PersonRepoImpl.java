@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public class PersonRepoImpl implements PersonRepo {
-    private List<Person> personList =new ArrayList<>();
+    private final List<Person> personList =new ArrayList<>();
 
     @Override
     public List<Person> findAll(){
@@ -17,19 +17,13 @@ public class PersonRepoImpl implements PersonRepo {
     }
     @Override
     public Person findByName(String name){
-        return personList.stream().filter(e->e.getName().equals(name)).findAny().orElseThrow();
+        return personList.stream().filter(e->e.getName().equals(name)).findAny().orElse(null);
     }
-    @Override
-    public boolean exit(String name){
-        return !personList.stream().filter(e->e.getName().equals(name)).toList().isEmpty();
-    }
+
     @Override
     public void save(Person person){
         personList.add(person);
     }
 
-    @Override
-    public void addGruppe(Integer id, Person person){
-        person.getGroupIdList().add(id);
-    }
+
 }

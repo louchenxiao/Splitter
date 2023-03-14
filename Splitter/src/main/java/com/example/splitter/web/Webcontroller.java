@@ -3,30 +3,24 @@ package com.example.splitter.web;
 import com.example.splitter.domain.*;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
-import com.example.splitter.service.Ueberweisung;
+import com.example.splitter.service.SplitterService;
 import org.javamoney.moneta.Money;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
 public class Webcontroller {
 
-    private final Ueberweisung ueberweisung;
+    private final SplitterService splitterService;
     private final GroupService groupService;
     private final PersonService personService;
 
-    public Webcontroller(Ueberweisung ueberweisung, GroupService groupService, PersonService personService) {
-        this.ueberweisung = ueberweisung;
+    public Webcontroller(SplitterService splitterService, GroupService groupService, PersonService personService) {
+        this.splitterService = splitterService;
         this.groupService = groupService;
         this.personService = personService;
     }
@@ -67,7 +61,7 @@ public class Webcontroller {
 
 
     @GetMapping("/createGruppe/{name}")
-    public String createGruppe(Model model,@PathVariable("name") String name){
+    public String createGruppe(@PathVariable("name") String name){
         return "createGruppe";
     }
 
@@ -93,7 +87,7 @@ public class Webcontroller {
 
     @GetMapping("/result/{id}")
     public   String getResult(@PathVariable Integer id, Model model){
-        List<Result> result = ueberweisung.result(groupService.findByGroupId(id));
+        List<Result> result = splitterService.result(groupService.findByGroupId(id));
         model.addAttribute("result",result);
 
         return "result" ;

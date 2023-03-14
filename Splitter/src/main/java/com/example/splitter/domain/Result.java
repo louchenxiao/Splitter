@@ -5,8 +5,8 @@ import org.javamoney.moneta.Money;
 import java.util.Objects;
 
 public class Result {
-    private Person receiver;
-    private Person giver;
+    private final Person receiver;
+    private final Person giver;
     private Money money;
 
     public Result(Person receiver, Person giver, Money money) {
@@ -19,17 +19,13 @@ public class Result {
         return receiver;
     }
 
-    public void setReceiver(Person receiver) {
-        this.receiver = receiver;
-    }
+
 
     public Person getGiver() {
         return giver;
     }
 
-    public void setGiver(Person giver) {
-        this.giver = giver;
-    }
+
 
     public Money getMoney() {
         return money;

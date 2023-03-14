@@ -1,16 +1,14 @@
 package com.example.splitter.domain;
 
 
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
+
 
 public class Gruppe {
     private final Integer id;
-    @NotBlank
     private final String name;
     private final List<Person> personen;
     private final List<Rechnung> rechnungList;

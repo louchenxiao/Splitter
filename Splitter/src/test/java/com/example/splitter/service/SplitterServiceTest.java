@@ -5,11 +5,138 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class UeberweisungTest {
+class SplitterServiceTest {
+    @Test
+    @DisplayName("init with not empty list")
+    void test_init_1(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        List<Person> personList = List.of(a,b,c);
+        SplitterService splitterService = new SplitterService();
+        List<PersonalBill> init = splitterService.init(personList);
+        assertThat(init).isEqualTo(List.of(new PersonalBill(a,Money.of(0,"EUR"))
+                ,new PersonalBill(b,Money.of(0,"EUR"))
+                ,new PersonalBill(c,Money.of(0,"EUR"))));
+    }
+
+    @Test
+    @DisplayName("init with empty list")
+    void test_init_2(){
+        List<Person> personList = List.of();
+        SplitterService splitterService = new SplitterService();
+        List<PersonalBill> init = splitterService.init(personList);
+        assertThat(init).isEqualTo(List.of());
+    }
+
+    @Test
+    @DisplayName("rechnen with empty list")
+    void test_rechnen_personal_bill_1(){
+        List<Person> personList = List.of();
+        List<Rechnung> rechnungList = List.of();
+        SplitterService splitterService = new SplitterService();
+
+        List<PersonalBill> rechnen = splitterService.rechnenBill(personList, rechnungList);
+
+        assertThat(rechnen).isEqualTo(List.of());
+    }
+
+    @Test
+    @DisplayName("rechnen with empty rechnung list")
+    void test_rechnen_personal_bill_2(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        List<Person> personList = List.of(a,b,c);
+        List<Rechnung> rechnungList = List.of();
+        SplitterService splitterService = new SplitterService();
+
+        List<PersonalBill> rechnen = splitterService.rechnenBill(personList, rechnungList);
+
+        assertThat(rechnen).isEqualTo(List.of(new PersonalBill(a, Money.of(0,"EUR"))
+                ,new PersonalBill(b, Money.of(0,"EUR"))
+                ,new PersonalBill(c, Money.of(0,"EUR"))));
+    }
+
+    @Test
+    @DisplayName("rechnen with empty person list")
+    void test_rechnen_personal_bill_3(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"),a, List.of(a, b));
+        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"),a, List.of(a, c));
+        List<Person> personList = List.of();
+        List<Rechnung> rechnungList = List.of(r1,r2);
+        SplitterService splitterService = new SplitterService();
+
+        List<PersonalBill> rechnen = splitterService.rechnenBill(personList, rechnungList);
+
+        assertThat(rechnen).isEqualTo(List.of());
+    }
+
+
+    @Test
+    @DisplayName("rechnen with nicht empty person list")
+    void test_rechnen_personal_bill_4(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"),a, List.of(a, b));
+        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"),a, List.of(a, c));
+        List<Person> personList = List.of(a,b,c);
+        List<Rechnung> rechnungList = List.of(r1,r2);
+        SplitterService splitterService = new SplitterService();
+
+        List<PersonalBill> rechnen = splitterService.rechnenBill(personList, rechnungList);
+
+        assertThat(rechnen).isEqualTo(List.of(new PersonalBill(a, Money.of(50.00, "EUR")),new PersonalBill(b, Money.of(-25, "EUR")),new PersonalBill(c, Money.of(-25, "EUR"))));
+    }
+
+    @Test
+    @DisplayName("splitter with empty person list")
+    void test_splitter_1(){
+        SplitterService splitterService = new SplitterService();
+        List<PersonalBill> rechnen = List.of();
+        List<Result> resultList = splitterService.splitter(rechnen);
+
+        assertThat(resultList).isEqualTo(List.of());
+    }
+
+    @Test
+    @DisplayName("splitter with person list")
+    void test_splitter_2(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        SplitterService splitterService = new SplitterService();
+        List<PersonalBill> rechnen = List.of(new PersonalBill(a, Money.of(50.00, "EUR"))
+                ,new PersonalBill(b,Money.of(-25,"EUR"))
+                ,new PersonalBill(c,Money.of(-25,"EUR")));
+        List<Result> resultList = splitterService.splitter(rechnen);
+
+        assertThat(resultList).isEqualTo(List.of(new Result(a,b,Money.of(25.00, "EUR")),new Result(a,c,Money.of(25.00, "EUR"))));
+    }
+
+
+    @Test
+    @DisplayName("splitter with person list2")
+    void test_splitter_3(){
+        Person a = new Person("a");
+        Person b = new Person("b");
+        Person c = new Person("c");
+        SplitterService splitterService = new SplitterService();
+        List<PersonalBill> rechnen = List.of(new PersonalBill(a,Money.of(656.67,"EUR"))
+                ,new PersonalBill(b,Money.of(-363.33,"EUR")),new PersonalBill(c,Money.of(-293.33,"EUR")));
+        List<Result> resultList = splitterService.splitter(rechnen);
+
+        assertThat(resultList).isEqualTo(List.of(new Result(a,b,Money.of(363.33, "EUR")),new Result(a,c,Money.of(293.33, "EUR"))));
+    }
 
 
 
@@ -26,11 +153,35 @@ class UeberweisungTest {
         List<Person> personList = List.of(a,b,c);
         List<Rechnung> rechnungList = List.of(r1,r2);
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
-        assertThat(u.rechnen(personList, rechnungList)).isEqualTo(List.of(new PersonalBill(a, Money.of(50, "EUR")),
+        assertThat(u.rechnenBill(personList, rechnungList)).isEqualTo(List.of(new PersonalBill(a, Money.of(50, "EUR")),
                 new PersonalBill(b, Money.of(-25, "EUR")), new PersonalBill(c, Money.of(-25, "EUR"))));
     }
+
+    @Test
+    @DisplayName("with empty rechnung gruppe")
+    void test_result_1(){
+        Gruppe gruppe = new Gruppe(1,"n",List.of(new Person("a")));
+        SplitterService splitterService = new SplitterService();
+        List<Result> results = splitterService.result(gruppe);
+
+        assertThat(results).isEqualTo(List.of());
+
+    }
+
+    @Test
+    @DisplayName("with empty person gruppe")
+    void test_result_2(){
+        Gruppe gruppe = new Gruppe(1,"n",List.of());
+        SplitterService splitterService = new SplitterService();
+        List<Result> results = splitterService.result(gruppe);
+
+        assertThat(results).isEqualTo(List.of());
+
+    }
+
+
 
 
 
@@ -49,7 +200,7 @@ class UeberweisungTest {
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         List<Result> results = u.result(group1);
 
@@ -74,7 +225,7 @@ class UeberweisungTest {
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
         List<Result> results = u.result(group1);
 
         assertThat(results).isEqualTo(List.of(new Result(b, a, Money.of(5, "EUR"))));
@@ -91,7 +242,7 @@ class UeberweisungTest {
 
         Gruppe group1 = new Gruppe(1,"group1",List.of(a,b));
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
@@ -113,7 +264,7 @@ class UeberweisungTest {
 
         Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c));
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
@@ -137,7 +288,7 @@ class UeberweisungTest {
 
         Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c));
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
@@ -167,7 +318,7 @@ class UeberweisungTest {
 
         Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c,d,e,f));
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
@@ -210,7 +361,7 @@ class UeberweisungTest {
 
         Gruppe group1 = new Gruppe(1,"group1",List.of(a,b,c,d,e,f,g));
 
-        Ueberweisung u = new Ueberweisung();
+        SplitterService u = new SplitterService();
 
         group1.getRechnungList().add(r1);
         group1.getRechnungList().add(r2);
@@ -229,85 +380,6 @@ class UeberweisungTest {
     }
 
 
-/*
-
-    @Test
-    void test_50() {
-
-        PersonRepo personRepo = new PersonRepo();
-        PersonService personService = new PersonService(personRepo);
-        Person a = personService.creatPerson("a");
-        Person b = personService.creatPerson("b");
-        Person c = personService.creatPerson("c");
-        Rechnung r1 = new Rechnung("1", Money.of(50, "EUR"),a, List.of(a, b));
-        Rechnung r2 = new Rechnung("2", Money.of(50, "EUR"),a, List.of(a, c));
-        GroupRepo groupRepo = new GroupRepo();
-        GroupService groupService = new GroupService(groupRepo);
-        Gruppe group1 = groupService.create("group1",personRepo.findAll());
-        Integer id = group1.getId();
-        groupService.addRechnung(id,r1);
-        groupService.addRechnung(id,r2);
-
-        Ueberweisung u = new Ueberweisung();
-
-        List<Person> personList = groupService.findByGroupId(id).getPersonen();
-        List<Rechnung> rechnungList = groupService.findByGroupId(id).getRechnungList();
-
-
-        assertThat(u.rechnen(personList, rechnungList)).isEqualTo(List.of(new PersonalBill(a, Money.of(50, "EUR")),
-                new PersonalBill(b, Money.of(-25, "EUR")), new PersonalBill(c, Money.of(-25, "EUR"))));
-    }
-
-    @Test
-    @DisplayName("Jeder kann die Gruppe schließen")
-    void test_s10() {
-        Person a = new Person("a");
-
-        Rechnung r1 = new Rechnung("Hotelzimmer", Money.of(564, "EUR"), a, List.of(a));
-
-        GroupRepo groupRepo = new GroupRepo();
-
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.now(),a);
-
-        u.addPerson(1, a,LocalDateTime.now());
-
-        u.addRechnung(1,r1,LocalDateTime.now());
-
-        groupRepo.close(1);
-
-        groupRepo.addRechnung(1, r1);
-
-        assertThat(groupRepo.findByID(1).orElseThrow().getRechnungList()).isEqualTo(List.of(r1));
-
-
-    }
-
-    @Test
-    @DisplayName("Gruppen können zu bestimmten Zeiten geschlossen werden")
-    void test_s11() {
-        Person a = new Person("a");
-
-        Rechnung r1 = new Rechnung("Hotelzimmer", Money.of(564, "EUR"), a, List.of(a));
-
-        GroupRepo groupRepo = new GroupRepo();
-
-        Ueberweisung u = new Ueberweisung(groupRepo);
-        u.createGroup(1, LocalDateTime.of(2023,2,3,11,0,0),a);
-
-        u.addPerson(1, a,LocalDateTime.of(2023,3,3,11,0,0));
-
-        u.addRechnung(1, r1,LocalDateTime.of(2023,3,3,11,0,0));
-
-
-
-        groupRepo.addRechnung(1, r1);
-
-        assertThat(groupRepo.findByID(1).orElseThrow().getRechnungList()).isEqualTo(List.of());
-
-
-    }
-*/
 
 
 

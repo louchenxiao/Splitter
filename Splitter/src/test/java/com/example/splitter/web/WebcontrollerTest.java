@@ -6,28 +6,21 @@ import com.example.splitter.domain.Rechnung;
 import com.example.splitter.helper.WithMockOAuth2User;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
-import com.example.splitter.service.Ueberweisung;
+import com.example.splitter.service.SplitterService;
 import org.javamoney.moneta.Money;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,7 +35,7 @@ class WebcontrollerTest {
     MockMvc mvc;
 
     @MockBean
-    Ueberweisung ueberweisung;
+    SplitterService splitterService;
 
     @MockBean
     PersonService personService;
@@ -50,13 +43,7 @@ class WebcontrollerTest {
     @MockBean
     GroupService groupService;
 
-    @BeforeEach
-    void setup() {
-        Person person = new Person("Erwin_Lindemann");
-        Gruppe gruppe = new Gruppe(33,"Tour",List.of(person));
 
-
-    }
     @Test
     @DisplayName("Die private Seite ist für nicht-authentifizierte User nicht erreichbar")
     void loginFailed() throws Exception {
@@ -194,10 +181,10 @@ class WebcontrollerTest {
         MvcResult mvcResult = mvc.perform(get("/schliessen/{id}", 22))
                 .andExpect(status().isOk())
                 .andReturn();
-        verify(groupService).closeGruppe(22);;
+        verify(groupService).closeGruppe(22);
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
-        assertThat(contentAsString).contains("Does it really want to close");
+        assertThat(contentAsString).contains("Do you really want to close this group?");
     }
 
 }

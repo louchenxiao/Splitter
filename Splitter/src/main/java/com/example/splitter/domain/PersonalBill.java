@@ -26,22 +26,23 @@ public class PersonalBill {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonalBill that = (PersonalBill) o;
+        return Objects.equals(person, that.person) && Objects.equals(geld, that.geld);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(person, geld);
+    }
+
+    @Override
     public String toString() {
         return "PersonalBill{" +
                 "person=" + person +
                 ", geld=" + geld +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PersonalBill personalBill)) return false;
-        return Objects.equals(getPerson(), personalBill.getPerson()) && Objects.equals(getGeld(), personalBill.getGeld());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPerson(), getGeld());
     }
 }

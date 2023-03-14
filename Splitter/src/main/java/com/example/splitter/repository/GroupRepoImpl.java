@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public class GroupRepoImpl implements GroupRepo {
-    private List<Gruppe> gruppeList = new ArrayList<>();
+    private final List<Gruppe> gruppeList = new ArrayList<>();
 
     @Override
     public List<Gruppe> findAll(){
@@ -18,7 +18,7 @@ public class GroupRepoImpl implements GroupRepo {
     }
     @Override
     public Optional<Gruppe> findByID(Integer id){
-        return gruppeList.stream().filter(gruppe -> gruppe.getId()==id).findAny();
+        return gruppeList.stream().filter(gruppe -> gruppe.getId().equals(id)).findAny();
     }
 
     @Override

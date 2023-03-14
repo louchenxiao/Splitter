@@ -9,9 +9,7 @@ public interface PersonRepo {
 
     Person findByName(String name);
 
-    boolean exit(String name);
 
     void save(Person person);
 
-    void addGruppe(Integer id, Person person);
 }
