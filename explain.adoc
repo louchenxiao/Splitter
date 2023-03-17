@@ -33,8 +33,7 @@ Negative: Do not like to socialise and prefer to go out alone
 8. Use ArchUnit to automatically check.
 
 == 3 Context and Scope
-== 3.1 Business context(The Diagram Not finished)
-image::onion.jpg[]
+image::Onion.jpg[]
 == 3.2 Technical context
  Domain
 
@@ -66,7 +65,11 @@ Webcontroller: front-end and back-end interaction
 
  Persistenz
 
-not yet implemented
+image:dependency.jpg[]
+
+ database
+
+image:database.jpg[align="bottom"]
 
  Configration
 
