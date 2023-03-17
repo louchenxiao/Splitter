@@ -10,6 +10,6 @@ public interface PersonRepo {
     Person findByName(String name);
 
 
-    void save(Person person);
+     void save(Person person);
 
 }

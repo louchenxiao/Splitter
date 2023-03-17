@@ -3,8 +3,8 @@ services:
   database:
     image: postgres:15-alpine
     ports:
-      - "4321:4321"
+      - "5432:5432"
     environment:
-      - "POSTGRES_DB=Splitter"
+      - "POSTGRES_DB=splitter"
       - "POSTGRES_USER=theuser"
       - "POSTGRES_PASSWORD=thepassword"

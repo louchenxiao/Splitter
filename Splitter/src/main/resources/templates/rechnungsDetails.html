@@ -22,8 +22,8 @@
 
  <tbody th:remove="all-but-first">
  <tr th:each="rechnung : ${allRechnung}">
-   <td th:text="${rechnung.rechnungName}">1</td>
-   <td th:text="${rechnung.geld}">5000.00</td>
+   <td th:text="${rechnung.name}">1</td>
+   <td th:text="${rechnung.money}">5000.00</td>
    <td th:text="${rechnung.payer}">A</td>
    <td th:text="${rechnung.persons}">A，B</td>
  </tr>

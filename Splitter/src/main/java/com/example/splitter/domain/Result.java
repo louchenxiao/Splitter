@@ -2,36 +2,37 @@ package com.example.splitter.domain;
 
 import org.javamoney.moneta.Money;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Result {
-    private final Person receiver;
-    private final Person giver;
-    private Money money;
+    private final String receiver;
+    private final String giver;
+    private BigDecimal money;
 
-    public Result(Person receiver, Person giver, Money money) {
+    public Result(String receiver, String giver, BigDecimal money) {
         this.receiver = receiver;
         this.giver = giver;
         this.money = money;
     }
 
-    public Person getReceiver() {
+    public String getReceiver() {
         return receiver;
     }
 
 
 
-    public Person getGiver() {
+    public String getGiver() {
         return giver;
     }
 
 
 
-    public Money getMoney() {
+    public BigDecimal getMoney() {
         return money;
     }
 
-    public void setMoney(Money money) {
+    public void setMoney(BigDecimal money) {
         this.money = money;
     }
 

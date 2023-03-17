@@ -1,12 +1,12 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Gruppe;
-import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -18,7 +18,7 @@ public class GroupService {
     }
 
     public Gruppe findByGroupId(Integer id){
-        return groupRepo.findByID(id).orElse(null);
+        return groupRepo.findByID(id);
     }
 
     public Integer check(String s){
@@ -35,30 +35,32 @@ public class GroupService {
             return -1;
         }
     }
-
+    public void save(Gruppe gruppe){
+        groupRepo.save(gruppe);
+    }
 
     public boolean exist(Integer id){
         return !groupRepo.findAll().stream().filter(gruppe -> gruppe.getId().equals(id)).toList().isEmpty();
     }
-    public Gruppe create(String name,List<Person> personen){
-        Gruppe gruppe = new Gruppe(findAll().size()+1, name, personen);
-        groupRepo.save(gruppe);
-        return gruppe;
+    public void create(String name,List<String> personen){
+        groupRepo.save(new Gruppe(name, personen));
     }
 
     public List<Gruppe> findAll(){
         return groupRepo.findAll();
     }
 
-    public boolean getStatus (Integer id) {
-        return findByGroupId(id).getGeschlossen();
-    }
+
 
     public void addRechnung(Integer id,Rechnung rechnung){
         if (exist(id) && !findByGroupId(id).getGeschlossen() ) {
-            findByGroupId(id).getRechnungList().add(rechnung);
+            Set<Rechnung> rechnungSet = findByGroupId(id).getRechnungSet();
+            rechnungSet.add(rechnung);
+            findByGroupId(id).setRechnungSet(rechnungSet);
         }
     }
+
+
 
     public List<Gruppe> getAllGruppe(List<Integer> idList){
         List<Gruppe> gruppeList = new ArrayList<>();
@@ -73,7 +75,9 @@ public class GroupService {
     public void closeGruppe(Integer id) {
         if (exist(id)) {
             Gruppe gruppe = findByGroupId(id);
-            gruppe.setGeschlossen();
+            gruppe.setGeschlossen(true);
+            groupRepo.save(gruppe);
         }
+
     }
 }

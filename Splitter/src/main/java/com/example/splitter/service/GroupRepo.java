@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface GroupRepo {
     List<Gruppe> findAll();
 
-    Optional<Gruppe> findByID(Integer id);
+    Gruppe findByID(Integer id);
 
     void save(Gruppe gruppe);
 }

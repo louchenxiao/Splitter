@@ -3,8 +3,18 @@ logging:
     org:
       springframework:
         security: info
+    level:
+      root: warn
 
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/splitter
+    username: theuser
+    password: thepassword
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+
   security:
     oauth2:
       client:
@@ -14,14 +24,5 @@ spring:
             client-secret: ${CLIENT_SECRET}
             scope: read:public_repo
 
-flyway:
-  schemas: Splitter
-  create-schemas: true
-  url: jdbc:postgresql://localhost:4321/Splitter
-  user: theuser
-  password: thepassword
 
-  datasource:
-    url: jdbc:postgresql://localhost:4321/Splitter
-    username: theuser
-    password: thepassword
+

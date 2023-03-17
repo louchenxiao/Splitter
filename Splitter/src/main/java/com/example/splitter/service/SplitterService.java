@@ -1,10 +1,11 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.*;
-import org.javamoney.moneta.Money;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -13,7 +14,7 @@ public class SplitterService {
     public List<PersonalBill> init(List<Person> personList){
         List<PersonalBill> money = new ArrayList<>();
         for (Person p :personList){
-            money.add(new PersonalBill(p,Money.of(0,"EUR")));
+            money.add(new PersonalBill(p.getName(),new BigDecimal(0)));
         }
         return money;
     }
@@ -21,16 +22,17 @@ public class SplitterService {
 
     public List<PersonalBill> rechnenBill(List<Person> personList, List<Rechnung> rechnungList){
         List<PersonalBill> money = init(personList);
+        MathContext mc = new MathContext(4, RoundingMode.HALF_UP) ;
         for (Rechnung r: rechnungList) {
-            Double zahl = (r.geld().divide(r.persons().size())).getNumberStripped().setScale(2, RoundingMode.HALF_EVEN).doubleValue();
-            Money each = Money.of(zahl,"EUR");
+            BigDecimal zahl = r.getMoney().divide(new BigDecimal(r.getPersons().size()),mc);
+
             for (PersonalBill m:money) {
-                if(m.getPerson().equals(r.payer())){
-                    Money geld = m.getGeld();
-                    m.setGeld(r.geld().add(geld));
+                if(m.getPerson().equals(r.getPayer())){
+                    BigDecimal geld = m.getGeld();
+                    m.setGeld((r.getMoney().add(geld).setScale(2,RoundingMode.HALF_UP)));
                 }
-                if(r.persons().stream().map(Person::getName).toList().contains(m.getPerson().getName())){
-                    m.setGeld(m.getGeld().subtract(each));
+                if(r.getPersons().contains(m.getPerson())){
+                    m.setGeld((m.getGeld().subtract(zahl).setScale(2,RoundingMode.HALF_UP)));
                 }
             }
         }
@@ -38,31 +40,36 @@ public class SplitterService {
     }
 
     public List<Result> splitter(List<PersonalBill> personalBillList){
-        List<PersonalBill> receiver= personalBillList.stream().filter(e -> e.getGeld().isPositive()).toList();
-        List<PersonalBill> giver = personalBillList.stream().filter(e -> e.getGeld().isNegative()).toList();
+        List<PersonalBill> receiver= personalBillList.stream().filter(e -> e.getGeld().signum()==1).toList();
+        List<PersonalBill> giver = personalBillList.stream().filter(e -> e.getGeld().signum()==-1).toList();
         List<Result> results = new ArrayList<>();
         for (PersonalBill personalBill : receiver) {
             for (PersonalBill bill : giver) {
-                if (personalBill.getGeld().isGreaterThanOrEqualTo(bill.getGeld().abs())) {
-                    results.add(new Result(personalBill.getPerson(), bill.getPerson(), bill.getGeld().abs()));
+                if (personalBill.getGeld().compareTo(bill.getGeld().abs())>-1) {
+                    if(bill.getGeld().abs().signum()==1) {
+                        results.add(new Result(personalBill.getPerson(), bill.getPerson(), bill.getGeld().abs()));
+                    }
                     personalBill.setGeld(personalBill.getGeld().add(bill.getGeld()));
-                    bill.setGeld(Money.of(0, "EUR"));
+                    bill.setGeld(new BigDecimal(0));
                 } else {
-                    if(personalBill.getGeld().abs().isPositive()){
+                    if(personalBill.getGeld().abs().signum()==1){
                         results.add(new Result(personalBill.getPerson(), bill.getPerson(), personalBill.getGeld().abs()));
                     }
                     bill.setGeld(bill.getGeld().add(personalBill.getGeld()));
-                    personalBill.setGeld(Money.of(0, "EUR"));
+                    personalBill.setGeld(new BigDecimal(0));
                 }
             }
         }
         return results;
     }
 
-    public List<Result> result(Gruppe gruppe){
-        List<Person> personList = gruppe.getPersonen();
-        List<Rechnung> rechnungList = gruppe.getRechnungList();
+    public List<Result> result(List<Person> personList,List<Rechnung> rechnungList){
         return splitter(rechnenBill(personList,rechnungList));
     }
 
+
+
 }
+
+
+

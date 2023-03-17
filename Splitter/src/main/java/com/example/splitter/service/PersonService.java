@@ -16,7 +16,8 @@ public class PersonService {
 
     public void addGruppeId(Integer id, Person person){
         if(exist(person.getName())) {
-            person.getGroupIdList().add(id);
+            person.getList().add(id);
+            personRepo.save(person);
         }
     }
     public Person findPerson(String name){
@@ -27,12 +28,14 @@ public class PersonService {
         if(exist(name)){
             return findPerson(name);
         }
-        else {
-            Person person = new Person(name);
+         else {
+            Person person = Person.createPerson(name);
             personRepo.save(person);
             return person;
         }
     }
+
+
 
     public boolean exist(String name) {
         return personRepo.findAll().stream().filter(e->e.getName().equals(name)).count()==1;

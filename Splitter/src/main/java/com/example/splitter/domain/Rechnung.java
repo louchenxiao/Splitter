@@ -1,32 +1,68 @@
 package com.example.splitter.domain;
 
-import org.javamoney.moneta.Money;
-
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Set;
 
-public record Rechnung(String rechnungName, Money geld, Person payer, List<Person> persons) {
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Rechnung rechnung)) return false;
-        return Objects.equals(rechnungName(), rechnung.rechnungName()) && Objects.equals(geld(), rechnung.geld()) && Objects.equals(payer(), rechnung.payer()) && Objects.equals(persons(), rechnung.persons());
+
+public class Rechnung{
+
+    private final String name;
+    private final BigDecimal money;
+    private final String payer;
+    private final Set<String> persons;
+
+
+    public Rechnung(String name, BigDecimal money, String payer, Set<String> persons) {
+        this.name = name;
+        this.money = money;
+        this.payer = payer;
+        this.persons = persons;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(rechnungName(), geld(), payer(), persons());
+
+    public Set<String> getPersons() {
+        return persons;
     }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+
+
+    public String getPayer() {
+        return payer;
+    }
+
 
     @Override
     public String toString() {
         return "Rechnung{" +
-                "rechnungName='" + rechnungName + '\'' +
-                ", geld=" + geld +
-                ", payer=" + payer +
+                "name='" + name + '\'' +
+                ", money=" + money +
+                ", payer='" + payer + '\'' +
                 ", persons=" + persons +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rechnung rechnung = (Rechnung) o;
+        return Objects.equals(name, rechnung.name) && Objects.equals(money, rechnung.money) && Objects.equals(payer, rechnung.payer) && Objects.equals(persons, rechnung.persons);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, money, payer, persons);
     }
 }

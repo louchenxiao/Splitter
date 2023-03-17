@@ -8,6 +8,7 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.library.GeneralCodingRules;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Repository;
@@ -46,6 +47,11 @@ public class ArchUnitTest {
             .accessClassesThat().areAnnotatedWith(Repository.class).andShould().accessClassesThat()
             .areAnnotatedWith(Service.class);
 
+    @ArchTest
+    ArchRule noMembersShouldBeAutowired = GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION;
+
+
+
 
     @Test
     @DisplayName("Die Splitter Anwendung hat eine Onion Architektur")
@@ -55,7 +61,7 @@ public class ArchUnitTest {
                 .domainServices("..service")
                 .applicationServices("..service")
                 .adapter("web","..web")
-                .adapter("persistence", "..repository");
+                .adapter("persistence", "..persistence");
 
         rule7.check(klassen);
     }

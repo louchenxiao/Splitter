@@ -2,26 +2,29 @@ package com.example.splitter.domain;
 
 import org.javamoney.moneta.Money;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class PersonalBill {
-    private final Person person;
-    private Money geld;
+    private final String person;
+    private BigDecimal geld;
 
-    public PersonalBill(Person name, Money geld) {
+    public PersonalBill(String name, BigDecimal geld) {
         this.person = name;
         this.geld = geld;
     }
 
-    public Person getPerson() {
+
+
+    public String getPerson() {
         return person;
     }
 
-    public Money getGeld() {
+    public BigDecimal getGeld() {
         return geld;
     }
 
-    public void setGeld(Money geld) {
+    public void setGeld(BigDecimal geld) {
         this.geld = geld;
     }
 

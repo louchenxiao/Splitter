@@ -9,6 +9,7 @@ import com.example.splitter.web.ApiRecord.ApiAusgleich;
 import com.example.splitter.web.ApiRecord.ApiGruppeInfo;
 import com.example.splitter.web.ApiRecord.Auslage;
 import com.example.splitter.web.ApiRecord.CreateGruppe;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
@@ -75,6 +77,7 @@ class RestcontrollerTest {
     @Test
     @DisplayName("When Auslage missing content , Http status is 400")
     void getauslagen() {
+        when(groupService.check("12")).thenReturn(12);
         Auslage auslage = new Auslage(null,null,0,Set.of() );
         ResponseEntity<String> getAuslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getAuslagen.getStatusCode().toString()).contains("400 BAD_REQUEST");
@@ -83,11 +86,12 @@ class RestcontrollerTest {
 
 
     @Test
-    @DisplayName("When grund in Auslage is null , Http status is 400")
+    @DisplayName("When grund in Auslage is null , Http status is 404")
     void getauslagen1() {
-
+        when(groupService.check("1")).thenReturn(1);
         Auslage auslage = new Auslage(null,"glaeubiger",66,Set.of("a") );
-        ResponseEntity<String> getAuslagen = restcontroller.getAuslagen(auslage, "12");
+        ResponseEntity<String> getAuslagen = restcontroller.getAuslagen(auslage, "1");
+        System.out.println(getAuslagen);
         assertThat(getAuslagen.getStatusCode().toString()).contains("400 BAD_REQUEST");
 
     }
@@ -96,6 +100,7 @@ class RestcontrollerTest {
     @Test
     @DisplayName("When glaeubiger in Auslage is null , Http status is 400")
     void getauslagen2() {
+        when(groupService.check("12")).thenReturn(12);
         Auslage auslage = new Auslage("grund",null,66,Set.of("a") );
         ResponseEntity<String> getAuslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getAuslagen.getStatusCode().toString()).contains("400 BAD_REQUEST");
@@ -107,6 +112,7 @@ class RestcontrollerTest {
     @Test
     @DisplayName("When cent in Auslage is 0 , Http status is 400")
     void getauslagen3() {
+        when(groupService.check("12")).thenReturn(12);
         Auslage auslage = new Auslage("grund","ss",0,Set.of("a") );
         ResponseEntity<String> getAuslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getAuslagen.getStatusCode().toString()).contains("400 BAD_REQUEST");
@@ -117,6 +123,7 @@ class RestcontrollerTest {
     @Test
     @DisplayName("When schuldner in Auslage is null , Http status is 400")
     void getauslagen4() {
+        when(groupService.check("12")).thenReturn(12);
         Auslage auslage = new Auslage("grund","ss",66,Set.of() );
         ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getauslagen.getStatusCode().toString()).contains("400 BAD_REQUEST");
@@ -127,9 +134,12 @@ class RestcontrollerTest {
     @DisplayName("When group is closed  , Http status is 409")
     void getauslagen5() {
         Auslage auslage = new Auslage("grund","ss",66,Set.of("s") );
-        when(groupService.check("1")).thenReturn(1);
-        when(groupService.getStatus(1)).thenReturn(true);
-        ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "1");
+        Gruppe gruppe = new Gruppe(12,"a",List.of("a"),Set.of(),true);
+        when(groupService.check("12")).thenReturn(12);
+
+        when(groupService.findByGroupId(12)).thenReturn(gruppe);
+        //when(groupService.getStatus(1)).thenReturn(true);
+        ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getauslagen.getStatusCode().toString()).contains("409");
     }
 
@@ -137,9 +147,10 @@ class RestcontrollerTest {
     @DisplayName("All ok , Http status is 201")
     void getauslagen6() {
         Auslage auslage = new Auslage("grund","ss",66,Set.of("s") );
-        when(groupService.check("1")).thenReturn(1);
-        when(groupService.getStatus(1)).thenReturn(false);
-        ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "1");
+        Gruppe gruppe = new Gruppe(12,"a",List.of("a"),Set.of(),false);
+        when(groupService.findByGroupId(12)).thenReturn(gruppe);
+        when(groupService.check("12")).thenReturn(12);
+        ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "12");
         assertThat(getauslagen.getStatusCode().toString()).contains("201");
     }
 
@@ -167,7 +178,7 @@ class RestcontrollerTest {
     @DisplayName("When all ok  , Http status is 200")
     void getAusgleichszahlungen1() {
         when(groupService.check("1")).thenReturn(1);
-        when(groupService.findByGroupId(1)).thenReturn(new Gruppe(1,"aa",List.of(new Person("as"))));
+        when(groupService.findByGroupId(1)).thenReturn(new Gruppe("aa",List.of("as")));
         ResponseEntity<List<ApiAusgleich>> ausgleichszahlungen = restcontroller.getAusgleichszahlungen("1");
         assertThat(ausgleichszahlungen.getStatusCode().toString()).contains("200");
     }
@@ -203,7 +214,7 @@ class RestcontrollerTest {
     @DisplayName("When all ok , Http status is 200")
     void schliessen2() {
         when(groupService.check("1")).thenReturn(1);
-        when(groupService.findByGroupId(1)).thenReturn(new Gruppe(1,"p",List.of(new Person("aa"))));
+        when(groupService.findByGroupId(1)).thenReturn(new Gruppe("p",List.of("aa")));
         ResponseEntity<String> schliessen = restcontroller.schliessen("1");
         assertThat(schliessen.getStatusCode().toString()).contains("200");
     }
@@ -218,10 +229,14 @@ class RestcontrollerTest {
     }
 
     @Test
+
     @DisplayName("When all ok , Http status is 200")
     void getAllGruppeInfo1() {
+
+        Gruppe gruppe = new Gruppe(1,"ss",List.of("44"),Set.of(),false);
         when(groupService.check("1")).thenReturn(1);
-        when(groupService.findByGroupId(1)).thenReturn(new Gruppe(1,"as",List.of(new Person("aa"))));
+        when(groupService.findByGroupId(1)).thenReturn(gruppe);
+        //when(Gruppe.createGruppe("a",List.of())).thenReturn(new Gruppe(1,"a",List.of("a"),Set.of(),false));
         ResponseEntity<ApiGruppeInfo> allGruppeInfo = restcontroller.getAllGruppeInfo("1");
         assertThat(allGruppeInfo.getStatusCode().toString()).contains("200");
     }
@@ -235,3 +250,4 @@ class RestcontrollerTest {
         assertThat(allGruppeInfo.getStatusCode().toString()).contains("404");
     }
 }
+
