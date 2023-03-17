@@ -17,23 +17,9 @@ import static org.mockito.Mockito.*;
 
 public class PersonServiceTest {
 
-
-    /*@Autowired
-    SpringdataPersonRepo springdataPersonRepo;
-    PersonRepo personRepo;
-
-    @BeforeEach
-    void init() {
-        personRepo = new PersonRepoImpl(springdataPersonRepo);
-    }*/
     @Test
     @DisplayName("find person in personRepo")
     void test_1() {
-
-
-       /* PersonService personService =new PersonService(personRepo);
-        personRepo.findAll();*/
-
 
         PersonRepo personRepo = mock(PersonRepoImpl.class);
         PersonService personService = new PersonService(personRepo);

@@ -39,27 +39,10 @@ import static org.mockito.Mockito.*;
 
 public class GroupServiceTest {
 
-/*
-    @Autowired
-    SpringdataGroupRepo springdataGroupRepo;
-    GroupRepo groupRepo;
-
-
-    @BeforeEach
-    void init() {
-        groupRepo = new GroupRepoImpl(springdataGroupRepo);
-    }*/
-
 
     @Test
     @DisplayName("not find group")
     void test_s1() {
-        /*GroupService groupService = new GroupService(groupRepo);
-        groupRepo.findAll();
-
-        System.out.println(groupService.findAll());
-        assertThat(groupService.findAll().size()).isEqualTo(1);*/
-
 
         GroupRepo groupRepo = mock(GroupRepoImpl.class);
         GroupService groupService = new GroupService(groupRepo);
@@ -176,41 +159,10 @@ public class GroupServiceTest {
     }
 
 
-    @Test
-    @DisplayName("add rechnung")
-    void test_add_rechnung_1() {
-        GroupRepo groupRepo = mock(GroupRepoImpl.class);
-        GroupService groupService = new GroupService(groupRepo);
-        Gruppe gruppe = new Gruppe(1, "a", List.of("a", "b"), new HashSet<>(), false);
-        Rechnung rechnung = new Rechnung("gg"
-                , new BigDecimal(10), "a", Set.of("a"));
 
 
-        when(groupRepo.findAll()).thenReturn(List.of(gruppe));
-        when(groupRepo.findByID(1)).thenReturn(gruppe);
-        groupService.addRechnung(1, rechnung);
-        assertThat(gruppe.getRechnungSet()).isEqualTo(Set.of(rechnung));
 
 
-    }
-
-
-    @Test
-    @DisplayName("add rechnung with wrong id")
-    void test_add_rechnung_2() {
-        GroupRepo groupRepo = mock(GroupRepoImpl.class);
-        GroupService groupService = new GroupService(groupRepo);
-        Gruppe gruppe = new Gruppe(1, "a", List.of("a", "b"), new HashSet<>(), false);
-        Rechnung rechnung = new Rechnung("gg"
-                , new BigDecimal(10), "a", Set.of("a"));
-
-
-        when(groupRepo.findAll()).thenReturn(List.of(gruppe));
-        when(groupRepo.findByID(4)).thenReturn(null);
-        groupService.addRechnung(4, rechnung);
-        assertThat(gruppe.getRechnungSet()).isEqualTo(Set.of());
-
-    }
 
 
     @Test
@@ -273,26 +225,7 @@ public class GroupServiceTest {
     }
 
 
-    @Test
-    @DisplayName("when group closed cant add rechnung")
-    void test_add_rechnung_close() {
-        GroupRepo groupRepo = mock(GroupRepoImpl.class);
-        GroupService groupService = new GroupService(groupRepo);
-        Gruppe gruppe = new Gruppe(1, "a", List.of("a", "b"), new HashSet<>(), true);
-        Gruppe gruppe2 = new Gruppe(2, "a", List.of("a", "b"), new HashSet<>(), false);
 
-        when(groupRepo.findAll()).thenReturn(List.of(gruppe, gruppe2));
-        when(groupRepo.findByID(1)).thenReturn(gruppe);
-
-
-        Rechnung rechnung = new Rechnung("gg"
-                , new BigDecimal(10), "a", Set.of("a"));
-
-        groupService.addRechnung(1, rechnung);
-
-
-        assertThat(gruppe.getRechnungSet().size()).isZero();
-    }
 }
 
 

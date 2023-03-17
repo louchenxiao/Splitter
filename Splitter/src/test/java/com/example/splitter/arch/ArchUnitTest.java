@@ -53,6 +53,8 @@ public class ArchUnitTest {
 
 
 
+
+
     @Test
     @DisplayName("Die Splitter Anwendung hat eine Onion Architektur")
     public void rule7() throws Exception {

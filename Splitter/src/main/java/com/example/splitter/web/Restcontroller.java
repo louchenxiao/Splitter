@@ -63,9 +63,13 @@ public class Restcontroller {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
-        Rechnung rechnung = new Rechnung(auslage.grund(), new BigDecimal(auslage.cent())
+        /*Rechnung rechnung = new Rechnung(auslage.grund(), new BigDecimal(auslage.cent())
                 , auslage.glaeubiger(), auslage.schuldner());
-        groupService.addRechnung(check, rechnung);
+        groupService.addRechnung(check, rechnung);*/
+        Gruppe byGroupId = groupService.findByGroupId(check);
+        byGroupId.addRechnung(auslage.grund(), new BigDecimal(auslage.cent())
+                , auslage.glaeubiger(), auslage.schuldner());
+        groupService.save(byGroupId);
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }

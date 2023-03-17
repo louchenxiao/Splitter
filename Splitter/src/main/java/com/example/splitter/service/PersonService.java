@@ -51,4 +51,8 @@ public class PersonService {
         }
         return personList;
     }
+
+    public List<Person> findAll(){
+        return personRepo.findAll();
+    }
 }

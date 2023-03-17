@@ -51,17 +51,6 @@ public class GroupService {
     }
 
 
-
-    public void addRechnung(Integer id,Rechnung rechnung){
-        if (exist(id) && !findByGroupId(id).getGeschlossen() ) {
-            Set<Rechnung> rechnungSet = findByGroupId(id).getRechnungSet();
-            rechnungSet.add(rechnung);
-            findByGroupId(id).setRechnungSet(rechnungSet);
-        }
-    }
-
-
-
     public List<Gruppe> getAllGruppe(List<Integer> idList){
         List<Gruppe> gruppeList = new ArrayList<>();
         for (Integer i:idList) {

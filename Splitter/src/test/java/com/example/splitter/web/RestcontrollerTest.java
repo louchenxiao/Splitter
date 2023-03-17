@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -147,7 +148,7 @@ class RestcontrollerTest {
     @DisplayName("All ok , Http status is 201")
     void getauslagen6() {
         Auslage auslage = new Auslage("grund","ss",66,Set.of("s") );
-        Gruppe gruppe = new Gruppe(12,"a",List.of("a"),Set.of(),false);
+        Gruppe gruppe = new Gruppe(12,"a",List.of("a"),new HashSet<>(),false);
         when(groupService.findByGroupId(12)).thenReturn(gruppe);
         when(groupService.check("12")).thenReturn(12);
         ResponseEntity<String> getauslagen = restcontroller.getAuslagen(auslage, "12");

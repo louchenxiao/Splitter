@@ -2,16 +2,16 @@ create table gruppe(
     id          serial primary key,
     name        varchar(300),
     geschlossen boolean,
-    personen    character varying[]
+    personen    VARCHAR ARRAY
 );
 
 create table rechnung
 (
     id            serial primary key,
     name varchar,
-    money         money,
+    money         DECIMAL,
     payer         varchar,
-    persons       character varying[],
+    persons       VARCHAR ARRAY,
     gruppe      integer
         constraint gruppe
             references gruppe
