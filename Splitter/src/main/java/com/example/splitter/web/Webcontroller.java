@@ -35,7 +35,6 @@ public class Webcontroller {
         List<Gruppe> allGruppe = groupService.getAllGruppe(person.getList());
         m.addAttribute("person", person);
         m.addAttribute("groupList", allGruppe);
-
         return "homePage";
 
     }
@@ -54,17 +53,13 @@ public class Webcontroller {
                               String money, String payer,
                               @RequestParam(value = "personList", required = false) Set<String> personList,
                               @PathVariable("id") Integer id) {
-
         if (rechnungName.isEmpty() || rechnungName.isBlank() || personList.isEmpty()) {
             return "redirect:/rechnungsDetails/{id}";
         }
         Gruppe byGroupId = groupService.findByGroupId(id);
-        //groupService.findByGroupId(id).addRechnung(rechnungName,new BigDecimal(money),payer,personList);
         if (!byGroupId.getGeschlossen()){
             byGroupId.addRechnung(rechnungName, new BigDecimal(money), payer, personList);
         }
-
-        System.out.println(rechnungName);
         groupService.save(byGroupId);
 
 
@@ -89,18 +84,11 @@ public class Webcontroller {
         }
         List<Person> personByList = personService.createPersonByList(strings);
         groupService.create(gruppeName, strings);
-
         Integer id = groupService.findAll().stream().max(Comparator.comparing(Gruppe::getId)).get().getId();
-
-
         for (Person p : personByList) {
             personService.addGruppeId(id, p);
-
         }
-
         return "redirect:/";
-
-
     }
 
     @GetMapping("/result/{id}")
@@ -108,25 +96,14 @@ public class Webcontroller {
         List<String> personen = groupService.findByGroupId(id).getPersonen();
         List<Person> personByList = personService.createPersonByList(personen);
         Set<Rechnung> rechnungSet = groupService.findByGroupId(id).getRechnungSet();
-
-
         List<Result> result = splitterService.result(personByList,rechnungSet.stream().toList());
         model.addAttribute("result", result);
-        System.out.println(rechnungSet);
-        System.out.println(rechnungSet.stream().toList());
-
-        System.out.println(splitterService.init(personByList));
-        System.out.println(splitterService.rechnenBill(personByList,rechnungSet.stream().toList()));
-        System.out.println(result);
-
         return "result";
     }
 
     @GetMapping("/schliessen/{id}")
     public String schliessenPage(@PathVariable Integer id) {
-
         groupService.closeGruppe(id);
-
         return "schliessen";
     }
 }

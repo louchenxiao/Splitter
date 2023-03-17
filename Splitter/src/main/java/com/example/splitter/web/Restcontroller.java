@@ -62,10 +62,6 @@ public class Restcontroller {
         if (groupService.findByGroupId(check).getGeschlossen()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-        /*Rechnung rechnung = new Rechnung(auslage.grund(), new BigDecimal(auslage.cent())
-                , auslage.glaeubiger(), auslage.schuldner());
-        groupService.addRechnung(check, rechnung);*/
         Gruppe byGroupId = groupService.findByGroupId(check);
         byGroupId.addRechnung(auslage.grund(), new BigDecimal(auslage.cent())
                 , auslage.glaeubiger(), auslage.schuldner());
@@ -77,7 +73,6 @@ public class Restcontroller {
 
     @GetMapping("/api/gruppen/{id}/ausgleich")
     public ResponseEntity<List<ApiAusgleich>> getAusgleichszahlungen(@PathVariable("id") String id) {
-
         Integer check = groupService.check(id);
         if (check <= 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
