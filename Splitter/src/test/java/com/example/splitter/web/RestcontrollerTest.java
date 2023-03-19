@@ -1,7 +1,6 @@
 package com.example.splitter.web;
 
 import com.example.splitter.domain.Gruppe;
-import com.example.splitter.domain.Person;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
 import com.example.splitter.service.SplitterService;
@@ -71,7 +70,7 @@ class RestcontrollerTest {
     }
 
     @Test
-    @DisplayName("all right, Http status is 200")
+    @DisplayName("all right, Http status is 201")
     void createGruppe4() {
         CreateGruppe createGruppe = new CreateGruppe("name","a","b");
         when(groupService.findAll()).thenReturn(List.of(new Gruppe(1,"name",List.of("a","b"),Set.of(),false)));

@@ -1,12 +1,10 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Gruppe;
-import com.example.splitter.domain.Rechnung;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Service

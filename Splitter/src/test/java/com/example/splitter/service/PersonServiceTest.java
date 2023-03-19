@@ -1,15 +1,9 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Person;
-import com.example.splitter.persistence.GroupRepoImpl;
 import com.example.splitter.persistence.PersonRepoImpl;
-import com.example.splitter.persistence.SpringdataPersonRepo;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

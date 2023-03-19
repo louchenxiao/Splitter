@@ -1,23 +1,15 @@
 package com.example.splitter.service;
 
 import com.example.splitter.domain.Gruppe;
-import com.example.splitter.domain.Rechnung;
 import com.example.splitter.persistence.GroupRepoImpl;
 import com.example.splitter.persistence.SpringdataGroupRepo;
-import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.math.BigDecimal;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @DataJdbcTest
 public class GroupServiceJdbcTest {

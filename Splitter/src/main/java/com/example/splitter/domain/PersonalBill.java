@@ -1,6 +1,5 @@
 package com.example.splitter.domain;
 
-import org.javamoney.moneta.Money;
 
 import java.math.BigDecimal;
 import java.util.Objects;

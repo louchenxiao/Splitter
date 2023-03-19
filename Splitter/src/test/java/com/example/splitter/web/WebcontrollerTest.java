@@ -2,15 +2,11 @@ package com.example.splitter.web;
 
 import com.example.splitter.domain.Gruppe;
 import com.example.splitter.domain.Person;
-import com.example.splitter.domain.Rechnung;
 import com.example.splitter.helper.WithMockOAuth2User;
 import com.example.splitter.service.GroupRepo;
 import com.example.splitter.service.GroupService;
 import com.example.splitter.service.PersonService;
 import com.example.splitter.service.SplitterService;
-import org.javamoney.moneta.Money;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Set;
 

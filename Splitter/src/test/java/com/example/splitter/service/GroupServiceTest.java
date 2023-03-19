@@ -1,33 +1,10 @@
 package com.example.splitter.service;
-
-import com.example.splitter.SplitterApplication;
 import com.example.splitter.domain.Gruppe;
-
-import com.example.splitter.domain.Rechnung;
-
 import com.example.splitter.persistence.GroupRepoImpl;
-
-
-import com.example.splitter.persistence.SpringdataGroupRepo;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
-
-
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
