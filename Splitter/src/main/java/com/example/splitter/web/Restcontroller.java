@@ -2,6 +2,7 @@ package com.example.splitter.web;
 
 import com.example.splitter.domain.Gruppe;
 
+import com.example.splitter.domain.Person;
 import com.example.splitter.domain.Rechnung;
 import com.example.splitter.domain.Result;
 import com.example.splitter.service.GroupService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,15 +37,15 @@ public class Restcontroller {
 
     @PostMapping("/api/gruppen")
     public ResponseEntity<String> createGruppe(@RequestBody CreateGruppe createGruppe) {
-        List<String> personList = new ArrayList<>();
         if (createGruppe.name() == null || createGruppe.personen() == null || createGruppe.personen().length == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        for (String name : createGruppe.personen()) {
-            personList.add(personService.creatPerson(name).getName());
-        }
-        groupService.create(createGruppe.name(), personList);
+        groupService.create(createGruppe.name(), Arrays.stream(createGruppe.personen()).toList());
         Integer id = groupService.findAll().stream().max(Comparator.comparing(Gruppe::getId)).get().getId();
+        for (String name : createGruppe.personen()) {
+            Person person = personService.creatPerson(name);
+            personService.addGruppeId(id,person);
+        }
         return new ResponseEntity<>(id.toString(), HttpStatus.CREATED);
     }
 
