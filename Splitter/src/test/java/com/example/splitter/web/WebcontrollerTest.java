@@ -60,7 +60,6 @@ class WebcontrollerTest {
 
         when(personService.creatPerson("Erwin_Lindemann")).thenReturn(mockPerson);
         when(groupService.getAllGruppe(any())).thenReturn(List.of());
-        //when(mockPerson.getGroupIdList()).thenReturn(List.of());
 
         MvcResult mvcResult = mvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -71,7 +70,7 @@ class WebcontrollerTest {
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
         assertThat(contentAsString).contains("Erwin_Lindemann");
-        assertThat(contentAsString).contains("href=\"/createGruppe/Erwin_Lindemann/\">createGruppe");
+        assertThat(contentAsString).contains("/createGruppe/Erwin_Lindemann");
 
 
     }

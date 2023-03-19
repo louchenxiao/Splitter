@@ -11,8 +11,9 @@
 <br><br>
 <br><br>
 
-<a th:href="@{/createGruppe/{name}/(name=${name})}"
-   th:text="createGruppe">create</a>
+<form th:action="@{/createGruppe/{name}/(name=${name})}" method="get">
+    <button type="submit" class="btn btn-primary">CreateGroup</button>
+</form>
 <br><br>
 
 <table class="table">

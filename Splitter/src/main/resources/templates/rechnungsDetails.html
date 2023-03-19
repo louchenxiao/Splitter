@@ -58,11 +58,14 @@
            th:value="${person}">
     <br>
     <br>
-    <button type="submit" >Abschicken</button>
+    <button type="submit" class="btn btn-primary">Abschicken</button>
 </form>
 
-<a th:href="@{/}"
-   th:text="homePage">back</a>
+<br>
+<br>
+<form th:action="@{/}">
+    <button type="submit" class="btn btn-primary">HomePage</button>
+</form>
 
 
 </body>
