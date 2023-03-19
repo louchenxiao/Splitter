@@ -22,10 +22,9 @@ public class SplitterService {
 
     public List<PersonalBill> rechnenBill(List<Person> personList, List<Rechnung> rechnungList){
         List<PersonalBill> money = init(personList);
-        MathContext mc = new MathContext(4, RoundingMode.HALF_UP) ;
+        MathContext mc = new MathContext(20, RoundingMode.HALF_UP) ;
         for (Rechnung r: rechnungList) {
             BigDecimal zahl = r.getMoney().divide(new BigDecimal(r.getPersons().size()),mc);
-
             for (PersonalBill m:money) {
                 if(m.getPerson().equals(r.getPayer())){
                     BigDecimal geld = m.getGeld();
